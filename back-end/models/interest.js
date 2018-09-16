@@ -8,7 +8,7 @@ var interestSchema = Schema({
         type: Schema.ObjectId,
         ref: 'User'
     },
-    interested: Array
+    interested: []
     }, 
     { versionKey: false }
 );

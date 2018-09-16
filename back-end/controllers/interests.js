@@ -11,14 +11,14 @@ var moment = require('moment');
 
 /* On the user register*/
 function save(req, res){
-    var clasifications = req.body.clasifications;
+    var clasifications = req.body;
     var userId = req.params.id;
 
     var interests = new Interests();
     interests.user = userId;
     interests.interested = clasifications;
 
-    console.log(interests);
+    //console.log(interests);
     interests.save((err, interestsStored) => {
         if(err){
             res.status(500).send({message: 'Error al guardar intereses del usuario'});

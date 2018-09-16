@@ -22,14 +22,14 @@ function saveUser(req, res){
 
     // asignar valores al objeto user
     if(params.pw && params.name && params.surname && params.email){
-        user.name = params.name;
-        user.surname = params.surname;
-        user.email = params.email;
+        user.name = params.name.toLowerCase();
+        user.surname = params.surname.toLowerCase();
+        user.email = params.email.toLowerCase();
         user.role = 'ROLE_USER';
         user.image = 'defaultUser.png';
         user.notify = params.notify;
 
-        User.findOne({email: user.email}, (err, issetUser) => {
+        User.findOne({email: user.email.toLowerCase()}, (err, issetUser) => {
             if(err){
                 res.status(500).send({message: 'Error comprobando usuario'});
             }else{
@@ -158,16 +158,12 @@ function uploadImage(req, res){
         var file_ext = ext_split[1]; 
 
         if(file_ext == 'png' || file_ext == 'jpg' || file_ext == 'jpeg' || file_ext == 'gif'){
-            /*
-            res.status(200).send({
-                file_path: file_path,
-                file_split: file_split,
-                file_name: file_name
-            });
-            */
+            /* 
+            // revisar que el id del usuario que intenta cargar la imagen, sea el mismo que se autentifica (es algo redundante)
             if(userId != req.user.sub){
                 return res.status(500).send({ message: 'No tienes permiso para actualizar el usuario' });
             }
+            */
         
             User.findByIdAndUpdate(userId, {image: file_name}, {new: true}, (err, userUpdated) => {
                 if(err){
@@ -241,7 +237,7 @@ function getUser(req, res){
             if(!user){
                 res.status(404).send({message: 'El usuario no existe'});
             }else{
-                if(!user.delete){
+                if(!user.del){
                     res.status(200).send({user});
                 }else{
                     res.status(404).send({message: 'El usuario no existe'});
@@ -252,7 +248,7 @@ function getUser(req, res){
 }
 
 function getUsers(req, res){
-    User.find({ role: 'ROLE_USER', delete: false }).exec((err, users) => {
+    User.find({ role: 'ROLE_USER', del: false }).exec((err, users) => {
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{
@@ -266,7 +262,7 @@ function getUsers(req, res){
 }
 
 function getAll(req, res){
-    User.find({ delete: false }).exec((err, users) => {
+    User.find({ del: false }).exec((err, users) => {
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{
@@ -282,7 +278,7 @@ function getAll(req, res){
 function deleteUser(req, res){
     var userId = req.params.id;
 
-    User.findByIdAndUpdate(userId, {delete: true}, {new: true}, (err, userRemoved) =>{
+    User.findByIdAndUpdate(userId, {del: true}, {new: true}, (err, userRemoved) =>{
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{

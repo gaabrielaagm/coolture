@@ -11,7 +11,7 @@ var userSchema = Schema({
     role: String,
     image: String,
     notify: String,
-    delete: Boolean
+    del: Boolean
     },
     { versionKey: false }
 );
