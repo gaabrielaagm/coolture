@@ -12,11 +12,13 @@ import { AdminRoutingModule } from './admin-routing.module';
 import { ArtistAddComponent } from './components/artist/add/add.component';
 import { ArtistEditComponent } from './components/artist/edit/edit.component';
 import { ArtistListComponent } from './components/artist/list/list.component';
+import { ArtistDeleteComponent } from './components/artist/delete/delete.component';
 
 /* Event */
 import { EventAddComponent } from './components/event/add/add.component';
 import { EventEditComponent } from './components/event/edit/edit.component';
 import { EventListComponent } from './components/event/list/list.component';
+import { EventDeleteComponent } from './components/event/delete/delete.component';
 
 /* Main */
 import { MainComponent } from './components/main/main.component';
@@ -35,9 +37,11 @@ import { MainComponent } from './components/main/main.component';
         EventListComponent,
         EventAddComponent,
         EventEditComponent,
+        EventDeleteComponent,
         ArtistListComponent,
         ArtistAddComponent,
-        ArtistEditComponent
+        ArtistEditComponent,
+        ArtistDeleteComponent
         //SearchPipe
     ],
     imports: [
