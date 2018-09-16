@@ -1,0 +1,207 @@
+<div class="col-md-8 offset-2">
+    <h3>{{title}}</h3>
+    <hr>
+    <!-- Mensajes informativos -->
+    <div class="alert alert-success" *ngIf="status =='success'">
+        Registro completado correctamente a través del correo: {{correo_registrado}} 
+        <br> 
+        <a [routerLink]="['/login']" >Ingresa aquí.</a>   
+    </div>
+    <div class="alert alert-danger" *ngIf="status =='errorSave'">
+        Ha ocurrido un error, vuelva a intentarlo.
+    </div>
+    <div class="alert alert-danger" *ngIf="status =='errorExist'">
+        El correo que proporcionaste ya está registrado. 
+        <br> 
+        Puedes <a [routerLink]="['/login']" > ingresar aquí.</a> 
+    </div>
+
+    <!-- Formulario -->
+    <form *ngIf="mostrar_form" #registerForm="ngForm" (ngSubmit)="submit()">
+        <div class="form-group">
+            <label for="nombre" hidden="hidden">Nombre:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        👤 
+                    </span>
+                </div>
+                <input type="text" class="form-control" #name="ngModel" [(ngModel)]="user.name" 
+                id="nombre" name="nombre" placeholder="Nombre" required pattern="[a-zA-Z]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!name.valid && name.touched">
+                Introduce un <strong>nombre</strong>. No se permiten números.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="apellido" hidden="hidden">Apellidos:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        👥 
+                    </span>
+                </div>
+                <input type="text" class="form-control" #surname="ngModel" [(ngModel)]="user.surname" 
+                id="apellido" name="apellido" placeholder="Apellido" required pattern="[a-zA-Z]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!surname.valid && surname.touched">
+                Introduce un <strong>apellido</strong>. No se permiten números.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="correo" hidden="hidden">Correo:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        📧  
+                    </span>
+                </div>
+                <input type="correo" class="form-control" #email="ngModel" [(ngModel)]="user.email" 
+                id="correo" name="correo" placeholder="Correo: nombre@correo.com" 
+                required 
+                pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="email.touched && !email.valid">
+                <strong>Correo</strong> no válido.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password" hidden="hidden">Contraseña:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        🔐 
+                    </span>
+                </div>
+                <input type="password" class="form-control" #password="ngModel" [(ngModel)]="user.pw" 
+                id="password" name="password" placeholder="Contraseña" required pattern="[a-zA-Z0-9]{6}">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!password.valid && password.touched">
+                La <strong>contraseña</strong> no es válida. Mínimo 6 caracteres (solo puedes usar letras y números)
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">👩|🧑</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input"  name="file" id="file" (change)="fileChangeEvent($event)">
+                    <label class="custom-file-label" for="file">Imagen de perfil</label>
+                </div>
+            </div>
+            <div class="alert alert-success" *ngIf="imageSelect">
+                Nueva imagen seleccionada.
+            </div>
+            <!--
+            <div class="alert alert-danger" role="alert" *ngIf="file.touched && !imageSelect">
+                Selecciona alguna <strong>imagen</strong> para tu perfil
+            </div>
+            -->
+        </div>
+
+        <div class="form-group">
+            <label>
+                <strong>Selecciona tus temas preferidos: </strong>
+            </label>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    👠 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Danza" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="dance" id="dance" name="dance" [checked]="dance" [(ngModel)]="dance">
+            </span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🎨 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Pintura" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="painting" id="painting" name="painting" [checked]="painting" [(ngModel)]="painting">
+            </span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🎵 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Musica" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="music" id="music" name="music" [checked]="music" [(ngModel)]="music">
+            </span>
+        </div>
+
+        <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                    🎞️
+                    </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Cine" readonly="readonly">
+                <span class="input-group-text">
+                    <input type="checkbox" value="movie" id="movie" name="movie" [checked]="movie" [(ngModel)]="movie">
+                </span>
+            </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    📖
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Literatura" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="literature" id="literature" name="literature" [checked]="literature" [(ngModel)]="literature">
+            </span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🏛️
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Arquitectura" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="architecture" id="architecture" name="architecture" [checked]="architecture" [(ngModel)]="architecture">
+            </span>
+        </div>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🗼️️
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Escultura" readonly="readonly">
+            <span class="input-group-text">
+                <input type="checkbox" value="sculpture" id="sculpture" name="sculpture" [checked]="sculpture" [(ngModel)]="sculpture">
+            </span>
+        </div>
+
+        <div class="form-group">
+            <label class="form-check-label ">
+                <input class="form-check-input" type="checkbox" id="notify" name="notify" [checked]="notify" [(ngModel)]="notify"> Recibir notificaciones
+            </label>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Registrarme" class="btn btn-primary" [disabled]="!registerForm.form.valid">
+        </div>
+    </form>
+</div>
