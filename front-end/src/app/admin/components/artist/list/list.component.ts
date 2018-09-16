@@ -9,7 +9,7 @@ export class ArtistListComponent {
     public title : String;
 
     constructor(){
-        this.title = 'Lista de Artitas';
+        this.title = 'Lista de Artistas';
     }
 
     ngOnInit(): void {
