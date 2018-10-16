@@ -1,0 +1,53 @@
+<ng-container *ngIf="identity != null">
+    <div class="row container-12" style="padding: 1%;">
+        <div class="col-md-2">
+            <h4>{{title}}</h4>
+            <div class="sidebar-admin">
+                <ul class="nav flex-column">
+                    <div class="dropdown-divider"></div>
+
+                    <li class="nav-item">
+                        <a class="nav-link" [routerLink]="['recientes']" [routerLinkActive]="['active']">
+                            Proximos
+                        </a>
+                    </li>
+
+                    <div class="dropdown-divider"></div>
+                    
+                    <li class="dropdown" [routerLinkActive]="['active']">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Participas
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" [routerLink]="['asistencias','proximos']">Asistirás</a>
+                            <a class="dropdown-item" [routerLink]="['asistencias', 'pasados']">Asististe</a>
+                        </div>
+                    </li>
+
+                    <div class="dropdown-divider"></div>
+
+                    <li class="dropdown" [routerLinkActive]="['active']">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Favoritos
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" [routerLink]="['favoritos', 'todos']">Todos</a>
+                            <a class="dropdown-item" [routerLink]="['favoritos', 'proximos']">Proximos</a>
+                            <a class="dropdown-item" [routerLink]="['favoritos', 'pasados']">Pasados</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-10" style="padding: 2%;">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</ng-container>
+
+<ng-container *ngIf="identity == null">
+    <div class="col-md-12" style="padding: 2%;">
+        <router-outlet></router-outlet>
+    </div>
+</ng-container>

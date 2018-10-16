@@ -1,0 +1,81 @@
+<h5>{{title}}</h5>
+<hr>
+<br>
+<div class="container" *ngIf="event.title != ''">
+    <div class="card-columns" style="display:inline">
+        <div class="card" >
+            <img class="card-img-top" src="{{urlImage+event.image}}" alt="Imagen evento" style="width: 200px;">
+            <div class="card-body">
+                <h3>{{event.title}}</h3><br>
+                <p class="card-text"> <strong> Clasificación: </strong> {{ event.clasification | titlecase }} </p>
+                <p class="card-text"> <strong> Tipo: </strong> {{ event.type | titlecase }} </p>
+                <p class="card-text"> <strong> Lugar: </strong> {{ event.place | titlecase }}  </p>
+                <p class="card-text"> <strong> Fecha: </strong> {{ event.date | date:'longDate' }}  </p>
+                <p class="card-text"> <strong> Hora: </strong> {{ event.hour }}</p>
+                <p class="card-text"> <strong> Pagina Web: </strong> {{ event.webpage}}</p>
+                <p class="card-title"> <strong>Artistas:</strong></p>
+                <p class="card-text" *ngFor="let artist of event.artists; i as index" style="display:inline">
+                    <a data-toggle="modal" href="#modal-artist" (click)="showInfoArtist(artist)"> {{ artist + " " | titlecase }} </a>
+                </p>
+                <br><br>
+                <p class="card-text" style="display:block"> <strong>Descripción:</strong></p>
+                <p class="card-text">
+                    {{ event.description }}
+                </p>
+                <br><br>
+                <!--
+                <button class="btn btn-sm btn-secondary" *ngIf="identity == 'ROLE_ADMIN'" style="margin:2px;"> <input type="checkbox"  (click)="chekedAssistance()"> ✔️ Asistiré</button>
+                <button class="btn btn-sm btn-dark" *ngIf="identity == 'ROLE_ADMIN'" style="margin:2px;"> <input type="checkbox" (click)="chekedFavorite()"> ⭐ Favoritos </button>
+                -->
+                <a data-toggle="modal" href="#modal" title="Eliminar" class="btn btn-danger btn-sm" style="margin:2px;" *ngIf="identity.role == 'ROLE_ADMIN'">❌ Eliminar</a>
+                <a [routerLink]="['/admin-panel/editar-evento', event._id]" routerLinkActive="router-link-active" style="margin:2px;" class="btn btn-sm btn-warning" *ngIf="identity.role == 'ROLE_ADMIN'">✏️ Editar</a>
+        
+                <!-- Delete Modal -->
+                <div class="modal fade" id="modal" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                ¿Estas seguro de querer  <br> <strong>{{event.title}}</strong>?
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Si eliminas el evento ya no podrás recuperarlo.
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cancelar</a>
+                            <a class="btn btn-danger btn-sm" data-dismiss="modal" (click)="deleteEvent(event._id)">Eliminar</a>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Artist modal-->
+                <div class="modal fade" id="modal-artist" role="dialog" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <strong>Artista: </strong>{{title_artist}}
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            
+                            <div class="modal-body">
+
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

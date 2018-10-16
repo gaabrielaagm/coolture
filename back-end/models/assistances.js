@@ -14,7 +14,7 @@ var assistanceSchema = Schema({
         },
         date_yes : Date,
         date_no : Date,
-        delete : Boolean
+        del : Boolean
     },
     { versionKey: false }
 );

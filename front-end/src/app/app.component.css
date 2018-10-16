@@ -1,0 +1,50 @@
+/*
+.navbar{
+    font-size: 13px;
+    height: 50px;
+    max-height: 50px;
+}
+*/
+
+.dropdown{
+    height: 50px;
+    max-height: 50px;
+}
+
+.navbar .active{
+    border-top: 2px solid rgb(44, 12, 131);
+}
+
+.nav-link:hover{
+    border-bottom: 2px solid rgb(44, 12, 131);
+    color: rgb(151, 16, 111);
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.nav-item{
+    height: 40px;
+    max-height: 40px;
+}
+
+.avatar{
+    width: 30px; 
+    height: 30px;
+    /*border: 2px solid #7C4DFF;*/
+    border-radius: 50%; 
+}
+
+.header{
+    height: 120px; 
+    max-height: 120px;
+    background-color: #212121; 
+    text-align: center;
+    color: blanchedalmond;
+    padding-top: 2%;
+}
+
+.bg-darks{
+    background-color: #212121; 
+}

@@ -9,6 +9,7 @@ export class UserService{
     public url: string;
     public identity;
     public token;
+    public clasifications;
 
     constructor(
         private _http: Http
@@ -17,7 +18,7 @@ export class UserService{
     }
 
     register(user_to_register){
-        console.log(user_to_register);
+        //console.log(user_to_register);
         //se pasara un objeto json pero convertido en un string, (y ya la API lo convierte a un objeto usable)
         //El método JSON.stringify() convierte un valor dado en javascript a una cadena JSON
         let params = JSON.stringify(user_to_register);
@@ -28,11 +29,22 @@ export class UserService{
     }
 
     registerInterests(userId, clasifications){
-        console.log(clasifications);
+        //console.log(clasifications);
         //let params = JSON.stringify(clasifications);
         let headers = new Headers({'Content-Type': 'application/json'});
 
         return this._http.post(this.url+'registerInterests/'+userId, clasifications, { headers: headers })
+                            .pipe(map(res => res.json())); 
+    }
+
+    getInterests(userId){
+        return this._http.get(this.url+'getInterests/'+userId).pipe(map(res => res.json()));
+    }
+
+    updateInterests(userId, clasifications){
+        let headers = new Headers({'Content-Type': 'application/json'});
+
+        return this._http.put(this.url+'updateInterests/'+userId, {clasifications: clasifications}, { headers: headers })
                             .pipe(map(res => res.json())); 
     }
 
@@ -62,6 +74,14 @@ export class UserService{
         }
         return this.token;
     }
+
+    getClasifications(){
+        let clasifications = JSON.parse(localStorage.getItem('userClasifications'));
+        if(clasifications != undefined){
+            this.clasifications = clasifications;
+        }
+        return this.clasifications;
+    }
     
     updateUser(user_to_update){
         let params = JSON.stringify(user_to_update);
@@ -70,8 +90,18 @@ export class UserService{
             'Authorization': this.getToken()
         });
 
-        return this._http.put(this.url+'update-user/'+user_to_update._id, params, { headers: headers})
+        return this._http.put(this.url+'update-user/'+user_to_update._id, params, { headers: headers })
                             .pipe(map(res => res.json())); 
+    }
+
+    updatePw(old, new_, userId){
+        let params = { 'newPw': new_, 'oldPw': old};
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': this.getToken()
+        });
+
+        return this._http.put(this.url+'pw-update/'+userId, params, { headers: headers })
     }
 
     getAvatar(){

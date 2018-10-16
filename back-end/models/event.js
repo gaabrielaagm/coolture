@@ -20,7 +20,7 @@ var eventSchema = Schema({
         image: String,
         dateCreated: Date,
         //dateCreated: {type: Date, default: Date.now}
-        delete: Boolean
+        del: Boolean
     },
     { versionKey: false }
 );

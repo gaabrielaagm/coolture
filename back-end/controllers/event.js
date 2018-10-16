@@ -35,14 +35,14 @@ function saveEvent(req, res){
         event.description = params.description;
         event.assistances = 0;
         event.webpage = params.webpage;
-        event.dateCreated = moment().format("DD/MM/YYYY");
-        event.delete = false;
+        event.dateCreated = moment().format('YYYY-MM-DD');
+        event.del = false;
         event.image = "default"+params.clasification+".png";
 
         var artistas = new Array();
-        for(var i=0; i< params.artist.length; i++){
+        for(var i=0; i< params.artists.length; i++){
             //artistas.push({_id: null, name: params.artist[i]});
-            artistas.push( { name: params.artist[i] } );
+            artistas.push( params.artists[i]);
         }
         event.artists = artistas
 
@@ -108,6 +108,7 @@ function saveEvent(req, res){
                     console.log(event);
                     event.save((err, eventStored) => {
                         if(err){
+                            console.log(err);
                             res.status(500).send({message: 'Error al guardar el evento'});
                         }else{
                             if(!eventStored){
@@ -138,25 +139,64 @@ function getEvents(req, res){
     Event.aggregate([
         {
             $match: { 
-                delete: false
+                del: false,
+                date : { $gte: new Date() }
             }
         },
         {   
-            $project:{
+            $project: {
                 date: 1, title: 1, clasification: 1, type: 1, city: 1, place: 1, description: 1, assistances: 1, webpage: 1,
-                dateCreated: 1, delete: 1,
+                dateCreated: 1, del: 1, image: 1,
                 date_format: { $dateToString: { format: "%d-%m-%Y", date: "$date"} },
                 hour: { $dateToString: { format: "%H:%M:%S", date: "$date"} }
             }
+        },
+        {
+            $sort: {
+                date: 1
+            }
         }
-    ]).exec((err, event) => {
+    ]).exec((err, events) => {
         if(err){
             res.status(500).send({message: 'El evento no existe'});
         }else{
-            if(!event){
+            if(!events){
                 res.status(404).send({message: 'El evento no existe'});
             }else{
-                res.status(200).send({event});                
+                res.status(200).send({events});                
+            }
+        }
+    });
+}
+
+function getAllEvents(req, res){
+    Event.aggregate([
+        {
+            $match: { 
+                del: false,
+            }
+        },
+        {   
+            $project: {
+                date: 1, title: 1, clasification: 1, type: 1, city: 1, place: 1, description: 1, assistances: 1, webpage: 1,
+                dateCreated: 1, del: 1, image: 1,
+                date_format: { $dateToString: { format: "%d-%m-%Y", date: "$date"} },
+                hour: { $dateToString: { format: "%H:%M:%S", date: "$date"} }
+            }
+        },
+        {
+            $sort: {
+                date: -1
+            }
+        }
+    ]).exec((err, events) => {
+        if(err){
+            res.status(500).send({message: 'El evento no existe'});
+        }else{
+            if(!events){
+                res.status(404).send({message: 'El evento no existe'});
+            }else{
+                res.status(200).send({events});                
             }
         }
     });
@@ -164,36 +204,52 @@ function getEvents(req, res){
 
 function getEvent(req, res){
     var eventId = req.params.id;
+    console.log(eventId);
     var newId = new mongoose.mongo.ObjectId(eventId);
-    /*
-    Event.findById(eventId).exec((err, event) => {
-        if(err){
-            res.status(500).send({message: 'El evento no existe'});
-        }else{
-            if(!event){
-                res.status(404).send({message: 'El evento no existe'});
-            }else{
-                if(!event.delete){
-                    res.status(200).send({event});
-                }else{
-                    res.status(404).send({message: 'El evento no existe'});
-                }
-            }
-        }
-    });
-    */
 
     Event.aggregate([
         {
             $match: { 
-                delete: false,
+                del: false,
                 _id: newId
             }
         },
         {   
             $project:{
                 date: 1, title: 1, clasification: 1, type: 1, city: 1, place: 1, description: 1, assistances: 1, webpage: 1,
-                dateCreated: 1, delete: 1,
+                dateCreated: 1, del: 1, artists: 1, image : 1, artists : 1, 
+                date_format: { $dateToString: { format: "%d-%m-%Y", date: "$date"} },
+                hour: { $dateToString: { format: "%H:%M:%S", date: "$date"} }
+            }
+        }
+    ]).exec((err, event) => {
+        if(err){
+            res.status(500).send({message: 'El evento no existe'});
+        }else{
+            if(!event){
+                res.status(404).send({message: 'El evento no existe'});
+            }else{
+                res.status(200).send({event: event});                
+            }
+        }
+    });
+}
+
+function getEventUser(req, res){
+    var eventId = req.params.id;
+    var newId = new mongoose.mongo.ObjectId(eventId);
+    
+    Event.aggregate([
+        {
+            $match: { 
+                del: false,
+                _id: newId
+            }
+        },
+        {   
+            $project:{
+                date: 1, title: 1, clasification: 1, type: 1, city: 1, place: 1, description: 1, assistances: 1, webpage: 1,
+                dateCreated: 1, del: 1,
                 date_format: { $dateToString: { format: "%d-%m-%Y", date: "$date"} },
                 hour: { $dateToString: { format: "%H:%M:%S", date: "$date"} }
             }
@@ -206,6 +262,37 @@ function getEvent(req, res){
                 res.status(404).send({message: 'El evento no existe'});
             }else{
                 res.status(200).send({event});                
+            }
+        }
+    });
+} 
+
+function getEventsByClasifications(req, res){
+    //var clasifications = new Array(req.body.clasifications);
+    var clasifications = [];
+    clasifications = req.body.clasifications;
+    console.log(clasifications); 
+    Event.aggregate([
+        {
+            $match: {
+                del: false,
+                date : {$gte: new Date()}, 
+                clasification: {$in: clasifications}
+            }
+        },
+        {
+            $sort : {
+                date: 1
+            }
+        }
+    ]).exec((err, events) => {
+        if(err){
+            res.status(500).send({message: 'Error en la peticion', error: err});
+        }else{
+            if(!events){
+                res.status(404).send({message: 'No existen eventos que coincidan'});
+            }else{
+                res.status(200).send({events});                
             }
         }
     });
@@ -231,7 +318,7 @@ function updateEvent(req, res){
 function deleteEvent(req, res){
     var eventId = req.params.id;
 
-    Event.findByIdAndUpdate(eventId, {delete: true}, {new: true}, (err, eventRemoved) => {
+    Event.findByIdAndUpdate(eventId, {del: true}, {new: true}, (err, eventRemoved) => {
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{
@@ -345,33 +432,36 @@ function decAssistances(req, res){
 function getGeneralRanking(req,res){
     var month = moment().month();
     var year = moment().year();
-    console.log(month);
+    console.log(month+1);
+    console.log(year);
+    console.log(moment());
     Event.aggregate([
         {
             $project: {
                 title : 1, assistances : 1, date : 1,
-                clasification : 1, type : 1,
-                year : { $year : "$date" },
+                clasification : 1, type : 1, image : 1,
+                year : { $year : "$date"},
                 month : { $month : "$date" },            
             }
         },
         {
             $match: {
-                month : { $eq : month },
-                year : { $eq : year }
+                month : { $eq : moment().month()+1 },
+                year : { $eq : moment().year() },
+                assistances : { $gt : 0 }
             }
         },
         {
-             $sort: {assistances: -1}
+            $sort: {assistances: -1}
         }
-    ]).exec((err, event) => {
+    ]).exec((err, events) => {
         if(err){
             res.status(500).send({message: 'Error al obtener eventos'});
         }else{
-            if(event.length == 0){
+            if(events.length == 0){
                 res.status(404).send({message: 'No existen eventos'});
             }else{
-                res.status(200).send({event});                
+                res.status(200).send({events});                
             }
         }
     });
@@ -381,6 +471,7 @@ function getSpecificRanking(req,res){
     var month = parseInt(req.params.month);
     var year = parseInt(req.params.year);
     console.log(month);
+    console.log(year);
     Event.aggregate([
         {
             $project: {
@@ -392,21 +483,21 @@ function getSpecificRanking(req,res){
         },
         {
             $match: {
-                month : { $eq : month },
-                year : { $eq : year }
+                month : { $eq : parseInt(month) },
+                year : { $eq : parseInt(year) }
             }
         },
         {
              $sort: {assistances: -1}
         }
-    ]).exec((err, event) => {
+    ]).exec((err, events) => {
         if(err){
             res.status(500).send({message: 'Error al obtener eventos'});
         }else{
-            if(event.length == 0){
+            if(events.length == 0){
                 res.status(404).send({message: 'No existen eventos'});
             }else{
-                res.status(200).send({event});                
+                res.status(200).send({events});                
             }
         }
     });
@@ -425,23 +516,27 @@ function getClasificationRanking(req,res){
         },
         {
             $match: {
+                month : { $eq : moment().month()+1 },
+                year : { $eq : moment().year() },
                 clasification : { $eq : clasification },
-                assistances : { $gt: 0 },
+                assistances : { $gt: 0 }
+                /*
                 year : { $eq : moment().year() },
                 month : { $eq : moment().month() }
+                */
             }
         },
         {
              $sort: {assistances: -1}
         }
-    ]).exec((err, event) => {
+    ]).exec((err, events) => {
         if(err){
             res.status(500).send({message: 'Error al obtener eventos'});
         }else{
-            if(event.length == 0){
-                res.status(404).send({message: 'No existen eventos'});
+            if(events.length == 0){
+                res.status(200).send({events: [] });
             }else{
-                res.status(200).send({event});                
+                res.status(200).send({events: events });                
             }
         }
     });
@@ -451,7 +546,9 @@ function getClasificationRanking(req,res){
 module.exports = {
     saveEvent,
     getEvents,
+    getAllEvents,
     getEvent,
+    getEventsByClasifications,
     updateEvent,
     uploadImage,
     getImageFile,

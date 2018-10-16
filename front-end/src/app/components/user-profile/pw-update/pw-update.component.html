@@ -1,0 +1,48 @@
+<div class="col-md-8 offset-2">
+        <h3>{{title}}</h3>
+        <hr>
+        <!-- Mensajes de error al loguearse -->
+        <br>
+        <div class="alert alert-danger" *ngIf="status == 'samePw'">
+            Ingresa una nueva contraseña diferente a la actual.
+        </div>
+        <div class="alert alert-success" *ngIf="status == 'success'">
+            Tu nueva contraseña ha sido <strong>actualizada correctamente</strong>.
+        </div>
+        <div class="alert alert-danger" *ngIf="status == 'error'">
+            Tu contraseña actual <strong>no es correcta</strong>. Vuelve a intentarlo.
+        </div>
+
+    <!-- Form-->
+    <form #loginForm="ngForm" (ngSubmit)="submit()" *ngIf="mostrarForm">
+        <div class="form-group">
+            <label for="password" hidden="hidden">Actual contraseña:</label>
+            <div class="input-group">
+                <div class="input-group-prepend"> 
+                    <span class="input-group-text">🔓</span>
+                </div>
+                <input type="password" class="form-control" #old="ngModel" [(ngModel)]="oldPw" 
+                id="oldPw" name="Oldpw" placeholder="Actual contraseña" required pattern="[a-zA-Z0-9]{6}">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!old.valid && old.touched">
+                La <strong>contraseña</strong> no es válida. Mínimo 6 caracteres (solo puedes usar letras y números)
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="password" hidden="hidden">Nueva contraseña:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">🔐</span>
+                </div>
+                <input type="password" class="form-control" #new="ngModel" [(ngModel)]="newPw" 
+                id="newPw" name="newPw" placeholder="Nueva contraseña" required pattern="[a-zA-Z0-9]{6}">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!new.valid && new.touched">
+                La <strong>contraseña</strong> no es válida. Mínimo 6 caracteres (solo puedes usar letras y números)
+            </div>
+        </div>
+
+        <input type="submit" value="Actualizar" class="btn btn-primary" [disabled]="!loginForm.form.valid">
+    </form>
+</div>

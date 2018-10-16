@@ -1,1 +1,22 @@
-{{title}}
+<ngb-carousel *ngIf="images" class="carousel">
+    <ng-template ngbSlide *ngFor="let image of images">
+        <img class="w-100" [src]="image" alt="Random first slide">
+        <div class="carousel-caption">
+            <h3 class="display-3">Bienvenido(a)</h3>
+            <p class="lead">{{title}}</p>
+            <hr class="my-4">
+            <p class="">
+                <a class="btn btn-outline-primary btn-sm boton_home" [routerLink]="['/explorar']" role="button">
+                    Explora eventos recientes
+                </a>
+                <a class="btn btn-outline-success btn-sm boton_home" [routerLink]="['/registro']" role="button">
+                    Crea una cuenta y disfruta de más beneficios
+                </a>
+                <a class="btn btn-outline-warning btn-sm boton_home" [routerLink]="['/contacto']" role="button">
+                    Contáctanos
+                </a>
+            </p>
+        </div>
+    </ng-template>
+</ngb-carousel>
+

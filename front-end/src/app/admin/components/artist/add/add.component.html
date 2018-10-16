@@ -1,1 +1,74 @@
-{{title}}
+<div class="col-md-12">
+    <h3>{{title}}</h3> 
+    <hr>
+    <div class="alert alert-success" role="alert" *ngIf="status_general == 'success'">
+        Nuevo artista: <strong> {{artist.name}} </strong> ha sido agregado.
+        <br>
+        <a class="btn btn-sm btn-primary" [routerLink]="['/admin-panel/listado-artistas']">Ver artista agregado</a>
+        <a class="btn btn-sm btn-secondary" [routerLink]="['/admin-panel/listado-artistas']">Ver lista artistas</a>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="status_general == 'repeated-artist'">
+        El nombre del artista: <strong> {{artist.name}} </strong> ya existe.
+    </div>
+    <!-- Formulario -->
+    <form *ngIf="mostrar_form" #form="ngForm" (ngSubmit)="submit()">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Nombre: 
+                    </span>
+                </div>
+                <input type="text" class="form-control" #name="ngModel" [(ngModel)]="artist.name" 
+                id="nombre" name="nombre" required />
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!name.valid && name.touched">
+                Introduce un <strong>nombre válido</strong>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    Descripcion: 
+                </span>
+                <textarea class="form-control" name="descripcion" id="descripcion" rows="3" style="resize: none" [(ngModel)]="artist.description"></textarea>
+            </div> 
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Pagina Web: 
+                    </span>
+                </div>
+                <input class="form-control" #paginaweb="ngModel" name="pagina_web" [(ngModel)]="artist.webpage" 
+                     pattern="^[A-Za-z0-9 _ .]+(\s*[A-Za-z0-9]*)*[A-Za-z0-9 _ .]+$"/> 
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!paginaweb.valid && paginaweb.toucheds">
+                Introduce una <strong>página web válida</strong>.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Imagen:</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input"  name="file" id="file" (change)="fileChangeEvent($event)">
+                    <label class="custom-file-label" for="file">Seleccionar</label>
+                </div>
+            </div>
+            <div class="alert alert-success" *ngIf="imageSelect">
+                Nueva imagen seleccionada.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Añadir" class="btn btn-primary" [disabled]="!form.form.valid">
+        </div>
+
+    </form>
+</div>

@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { GLOBAL } from './global';
 
 @Injectable()
-export class AnimalService{
+export class ArtistService{
     public url: string;
 
     constructor(
@@ -14,38 +14,38 @@ export class AnimalService{
         this.url = GLOBAL.url;
     }
 
-    addArtist(token, animal){
+    addArtist(artist, token){
         //convertir el objeto javascript a un string de json
-        let params = JSON.stringify(animal);
+        let params = JSON.stringify(artist);
         let headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': token
         });
 
-        return this._http.post(this.url+'animal', params, {headers: headers})
+        return this._http.post(this.url+'artist', params, {headers: headers})
                             .pipe(map(res => res.json())); 
     }
 
-    getAnimals(){
-        return this._http.get(this.url+'animals').pipe(map(res => res.json()));
+    getArtists(){
+        return this._http.get(this.url+'artists').pipe(map(res => res.json()));
     }
 
-    getAnimal(id){
-        return this._http.get(this.url+'animal/'+id).pipe(map(res => res.json()));
+    getArtist(search, value){
+        return this._http.get(this.url+'artist/'+search+'/'+value).pipe(map(res => res.json()));
     }
 
-    editAnimal(token, id, animal){
-        let params = JSON.stringify(animal);
+    editArtist(artist, token){
+        let params = JSON.stringify(artist);
         let headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': token
         });
 
-        return this._http.put(this.url+'animal/'+id, params, {headers: headers})
+        return this._http.put(this.url+'artist/'+artist._id, params, {headers: headers})
                             .pipe(map(res => res.json())); 
     }
 
-    deleteAnimal(token, id){
+    deleteArtist(token, id){
         let headers = new Headers({
             'Content-Type': 'application/json',
             'Authorization': token
@@ -53,7 +53,7 @@ export class AnimalService{
 
         let options = new RequestOptions({headers: headers});
 
-        return this._http.delete(this.url+'animal/'+id, options)
+        return this._http.delete(this.url+'artist/'+id, options)
                             .pipe(map(res => res.json())); 
     
     }

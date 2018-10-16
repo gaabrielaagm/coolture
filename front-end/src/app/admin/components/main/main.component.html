@@ -1,11 +1,11 @@
-<div class="row container" style="padding: 2%;">
-    <div class="col-md-4">
+<div class="row container-12" style="padding: 1%;">
+    <div class="col-md-2">
         <h4>{{title}}</h4>
         <div class="sidebar-admin">
             <ul class="nav flex-column">
                 <div class="dropdown-divider"></div>
                 
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" [routerLinkActive]="['active']">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Eventos
                     </a>
@@ -17,7 +17,7 @@
 
                 <div class="dropdown-divider"></div>
 
-                <li class="nav-item dropdown">
+                <li class="nav-item dropdown" [routerLinkActive]="['active']">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Artistas
                     </a>
@@ -33,7 +33,7 @@
         </div>
     </div>
 
-    <div class="col-md-8" style="padding: 2%;">
+    <div class="col-md-10" style="padding: 1%; font-size: 15px;">
         <router-outlet></router-outlet>
     </div>
 </div>

@@ -1,1 +1,169 @@
-{{title}}
+<h4>{{title}}</h4>
+<hr>
+<div class="container">
+    <div class="input-group mb-3" style="margin-top:2%; margin-bottom:15%;">
+        <input type="text" class="form-control" placeholder="Buscador..." [(ngModel)]="to_search" >
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Filtrar</button>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripcion</th>
+                <th scope="col">Webpage</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let artist of artists | searchArtist: to_search" >
+                    <td>{{ artist.name | titlecase }}</td>
+                    <td>{{ artist.description | titlecase }}</td>
+                    <td>{{ artist.webpage }}</td>
+                    <td>
+                        <!--<a [routerLink]="['/admin-panel/ver-detalles-evento', event._id]" title="Ver detalles" class="btn btn-primary btn-sm">🔍</a>-->
+                        <a data-toggle="modal" href="#modal-view-{{artist._id}}" (click)="getViewArtist(artist._id)" title="Ver detalles" class="btn btn-primary btn-sm">🔍</a>
+                        <a data-toggle="modal" href="#modal-edit-{{artist._id}}" (click)="editArtist(artist)" title="Editar" class="btn btn-warning btn-sm">✏️</a>
+                        <!--<a [routerLink]="['/admin-panel/editar-artista', artist._id]" title="Editar" class="btn btn-warning btn-sm">✏️</a>-->
+                        <a data-toggle="modal" href="#modal-delete-{{artist._id}}" title="Eliminar" class="btn btn-danger btn-sm">❌</a>
+                    </td>
+                    <!-- Delete modal -->
+                    <div class="modal fade" id="modal-delete-{{artist._id}}" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    ¿Estas seguro de querer eliminar <br> <strong>{{artist.name}}</strong>?
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                Si eliminas el artista ya no podrás recuperarlo.
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cancelar</a>
+                                <a class="btn btn-danger btn-sm" data-dismiss="modal" (click)="deleteArtist(artist._id)" style="color:white">Eliminar</a>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- View modal-->
+                    <div class="modal fade" id="modal-view-{{artist._id}}" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <strong>{{view_artist.name}}</strong>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="modal-body" *ngIf="view_artist.image != ''">
+                                    <img class="card-img-top" src="{{urlImage+view_artist.image}}" alt="Imagen artista" style="width:50px" *ngIf="view_artist.image != ''">
+                                    <p class="card-text"> <strong> Descripcion: </strong> {{ view_artist.description | titlecase }} </p>
+                                    <p class="card-text"> <strong> Pagina Web: </strong> {{ view_artist.webpage | titlecase }} </p>
+                                    <br><br>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                    <!--<a data-toggle="modal" href="#modal-artist" title="Eliminar" class="btn btn-danger btn-sm">Artista</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Edit modal-->
+                    <div class="modal fade" id="modal-edit-{{artist._id}}" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <strong>{{edit_artist.name}}</strong>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                
+                                <div class="modal-body">
+                                    <form #form="ngForm">
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        Nombre: 
+                                                    </span>
+                                                </div>
+                                                <input type="text" class="form-control" #name="ngModel" [(ngModel)]="edit_artist.name" 
+                                                id="nombre" name="nombre" required />
+                                            </div>
+                                            <div class="alert alert-danger" role="alert" *ngIf="!name.valid && name.touched">
+                                                Introduce un <strong>nombre válido</strong>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    Descripcion: 
+                                                </span>
+                                                <textarea class="form-control" name="descripcion" id="descripcion" rows="3" style="resize: none" [(ngModel)]="edit_artist.description"></textarea>
+                                            </div> 
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">
+                                                        Pagina Web: 
+                                                    </span>
+                                                </div>
+                                                <input class="form-control" #paginaweb="ngModel" name="pagina_web" [(ngModel)]="edit_artist.webpage" 
+                                                    pattern="^[A-Za-z0-9 _ .]+(\s*[A-Za-z0-9]*)*[A-Za-z0-9 _ .]+$"/> 
+                                            </div>
+                                            <div class="alert alert-danger" role="alert" *ngIf="!paginaweb.valid && paginaweb.toucheds">
+                                                Introduce una <strong>página web válida</strong>.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <img src="{{urlImage+edit_artist.image}}" alt="Imagen artista" style="width:50px" *ngIf="edit_artist.image != ''">
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">Imagen:</span>
+                                                </div>
+                                                <div class="custom-file">
+                                                    <input type="file" class="custom-file-input"  name="file" id="file" (change)="fileChangeEvent($event)">
+                                                    <label class="custom-file-label" for="file">Seleccionar</label>
+                                                </div>
+                                            </div>
+                                            <div class="alert alert-success" *ngIf="imageSelect">
+                                                Nueva imagen seleccionada.
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <input type="button" value="Actualizar" class="btn btn-primary" [disabled]="!form.form.valid" (click)="updateArtist()" data-dismiss="modal"/>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                    <!--<a data-toggle="modal" href="#modal-artist" title="Eliminar" class="btn btn-danger btn-sm">Artista</a>-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

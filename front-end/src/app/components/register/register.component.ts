@@ -103,20 +103,19 @@ export class RegisterComponent {
                     /* user interests register */
                     this._userService.registerInterests(response.user._id, this.clasifications).subscribe(
                         response => {
-                            if(this.filesToUpload != null){
-
-                                /* user image upload */
+                            /* user image upload */
+                            if(this.filesToUpload != null){                                
                                 this._uploadService.makeFileRequest(this.url+'upload-image-user/'+userId, [],
                                 this.filesToUpload, /*this.token,*/ 'image')
                                 .then((result: any) => {
                                     this.status = 'success';
-                                    //this.mostrar_form = false;
+                                    this.mostrar_form = false;
                                     this.clasifications = [];
                                 });
 
                             }else{
                                 this.status = 'success';
-                                //this.mostrar_form = false;
+                                this.mostrar_form = false;
                                 this.clasifications = [];
                             }
                         },

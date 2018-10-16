@@ -1,8 +1,9 @@
 //Modulos
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { TitleCasePipe } from '@angular/common';
 
 import { AdminRoutingModule } from './admin-routing.module';
 
@@ -19,9 +20,12 @@ import { EventAddComponent } from './components/event/add/add.component';
 import { EventEditComponent } from './components/event/edit/edit.component';
 import { EventListComponent } from './components/event/list/list.component';
 import { EventDeleteComponent } from './components/event/delete/delete.component';
+import { EventViewComponent } from './components/event/view/view.component';
 
 /* Main */
 import { MainComponent } from './components/main/main.component';
+
+import { DpDatePickerModule } from 'ng2-date-picker';
 
 /*** Services ***/
 //import { UserService } from '../services/user.service';
@@ -29,7 +33,8 @@ import { MainComponent } from './components/main/main.component';
 //import { AdminGuard } from '../services/admin.guard';
 
 /*** Pipe ***/
-//import { SearchPipe } from './pipes/search.pipe';
+import { PipesModule } from '../pipes/pipes.module';
+
 
 @NgModule({
     declarations: [
@@ -38,17 +43,20 @@ import { MainComponent } from './components/main/main.component';
         EventAddComponent,
         EventEditComponent,
         EventDeleteComponent,
+        EventViewComponent,
         ArtistListComponent,
         ArtistAddComponent,
         ArtistEditComponent,
         ArtistDeleteComponent
-        //SearchPipe
     ],
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
-        AdminRoutingModule
+        DpDatePickerModule,
+        AdminRoutingModule,
+        PipesModule
     ],
     exports: [
         //En caso de que se quiera usar los componentes fuera del modulo (pero si no, no es necesario)
@@ -61,6 +69,7 @@ import { MainComponent } from './components/main/main.component';
         ArtistEditComponent
     ],
     providers: [ 
+        TitleCasePipe
         /*
         UserService,
         AdminGuard 

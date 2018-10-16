@@ -7,9 +7,8 @@ var artistSchema = Schema({
     name: String,
     description: String,
     webpage: String,
-    social_red: Array,
     image: String,
-    delete: Boolean
+    del: Boolean
     },
     { versionKey: false }
 );

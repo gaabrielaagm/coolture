@@ -1,1 +1,93 @@
-{{title}}
+<div class="container">
+    <div class="jumbotron">
+        <div class=""></div>
+        <img class="image-user" src="{{urlImage}}">
+        <h1 >{{user.name + ' ' + user.surname}}</h1>
+        <p class="lead"> {{user.email}} </p>
+        <hr class="my-4">
+
+        <h6>Tipos de eventos que te interesan: </h6>
+        <div class="input-group" *ngIf="dance">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    👠 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Danza" readonly="readonly">
+        </div>
+
+        <div class="input-group" *ngIf="painting">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🎨 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Pintura" readonly="readonly">
+        </div>
+
+        <div class="input-group" *ngIf="music">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🎵 
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Musica" readonly="readonly">
+        </div>
+
+        <div class="input-group" *ngIf="movie">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                    🎞️
+                    </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Cine" readonly="readonly">
+            </div>
+
+        <div class="input-group" *ngIf="literature">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    📖
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Literatura" readonly="readonly">
+        </div>
+
+        <div class="input-group" *ngIf="architecture">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🏛️
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Arquitectura" readonly="readonly">
+        </div>
+
+        <div class="input-group" *ngIf="sculpture">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🗼️️
+                </span>
+            </div>
+            <input type="text" class="form-control" placeholder="Escultura" readonly="readonly">
+        </div>
+
+        <br><br>
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    🔔
+                </span>
+            </div>
+            <input *ngIf="user.notify" type="text" class="form-control" placeholder="Recibo notificaciones de nuevos eventos" readonly="readonly">
+            <input *ngIf="!user.notify" type="text" class="form-control" placeholder="No deseo recibir notificaciones de nuevos eventos" readonly="readonly">
+        </div>
+
+        <br/><br/>
+
+        <div class="input-group">
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" [routerLink]="['/editar-perfil']" role="button">Editar datos</a>
+            </p>
+        </div>
+    </div>
+</div>

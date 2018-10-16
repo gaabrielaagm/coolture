@@ -27,7 +27,12 @@ function saveUser(req, res){
         user.email = params.email.toLowerCase();
         user.role = 'ROLE_USER';
         user.image = 'defaultUser.png';
-        user.notify = params.notify;
+        if(params.notify == 'true'){
+            user.notify = true;
+        }else{
+            user.notify = false;
+        }
+        user.del = false;
 
         User.findOne({email: user.email.toLowerCase()}, (err, issetUser) => {
             if(err){
@@ -111,7 +116,7 @@ function updateUser(req, res){
     // req.params -> los parámetros que llegan directamente de la url
     var userId = req.params.id;
     var update = req.body;
-    delete update.password;
+    delete update.pw;
 
     // verificamos que los dos ids sea iguales
     // Id que llega por la url != Id del usuario que esta logueado
@@ -292,7 +297,62 @@ function deleteUser(req, res){
 }
 
 function changePw(req, res){
+    var userId = req.params.id;
+    var old_pw = req.body.oldPw;
+    var new_pw = req.body.newPw;
 
+    /*
+    console.log('IDUSER: ' + userId);
+    console.log('OLD: ' + old_pw);
+    console.log('NEW: ' + new_pw);
+    */
+
+    if(req.user.sub != userId){
+        res.status(404).send({message: 'Ingresa correctamente'});
+    }else{
+
+    User.findById(userId, (err, user) => {
+        if(err){
+            console.log(err);
+            res.status(500).send({
+                message: 'Error en la petición',    
+                error: err
+            });
+        }else{
+            if(!user){
+                res.status(404).send({message: 'No existe el id usuario'});
+            }else{
+                bcrypt.compare(old_pw, user.pw, (err, check) => {
+                    if(check){
+                        // encrypt new pw
+                        bcrypt.hash(new_pw, null, null, function(err,hash){
+                            var encryptPw = hash;
+                            // update pw
+                            User.findByIdAndUpdate(userId, {pw: hash}, {new: true}, (err, userUpdated) =>{
+                                if(err){
+                                    res.status(500).send({message: 'Error al actualizar cotraseña del usuario'});
+                                }else{
+                                    if(!userUpdated){
+                                        res.status(404).send({message: 'Error no se ha encontrado el usuario'});
+                                    }else{
+                                        res.status(200).send({
+                                            message: "Nueva contraseña de usuario actualizada",
+                                            user: userUpdated
+                                        });
+                                    }
+                                }
+                            });
+                        });
+                    }else{
+                        res.status(404).send({
+                            message: 'Contraseña actual incorrecta'
+                        });
+                    }
+                });
+            }
+        }
+    });
+    }
 }
 
 //y todos esos métodos tienen que ser exportados de este modulo para poder usarlos fuera
@@ -306,5 +366,6 @@ module.exports = {
     getUser,
     getUsers,
     getAll,
-    deleteUser
+    deleteUser,
+    changePw
 }

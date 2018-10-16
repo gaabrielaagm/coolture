@@ -17,6 +17,8 @@ export class LoginComponent {
     public error;
     public status;
 
+    public clasifications = [];
+
     constructor(
         private _route: ActivatedRoute,
         private _router: Router,
@@ -36,13 +38,12 @@ export class LoginComponent {
         this._userService.signup(this.user, false).subscribe(
             response => {
                 this.identity = response.user;
-
                 if(!this.identity || !this.identity._id){
                     alert('Usuario no logueado correctamente');
                 }else{
                     // se hace un stringify() por que local storage no permite guardar objetos completos (solo numeros o strings)
                     localStorage.setItem('identity', JSON.stringify(this.identity));
-                    console.log(JSON.stringify(this.identity));
+                    //console.log(JSON.stringify(this.identity));
 
                     //conseguir el token
                     this._userService.signup(this.user, true).subscribe(
@@ -64,6 +65,18 @@ export class LoginComponent {
                             console.log(<any>error);
                         }
                     );
+
+                    /* setting localStorage of user clasifications */
+                    
+                    this._userService.getInterests(this.identity._id).subscribe(
+                        response => {
+                            this.clasifications = response.interests.interested;
+                            localStorage.setItem( 'userClasifications', JSON.stringify(this.clasifications) );
+                        },
+                        error => {
+                            console.log(error);
+                        }
+                    );
                 }
             },
             error => {
@@ -75,9 +88,9 @@ export class LoginComponent {
                     this.error = body.error;
                     console.log(this.error);
                 }
-                
             }
-            
         );
+
+        
     }
 }

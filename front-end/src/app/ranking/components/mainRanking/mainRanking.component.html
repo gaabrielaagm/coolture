@@ -1,0 +1,32 @@
+<div class="row container-12" style="padding: 1%;">
+    <div class="col-md-2">
+        <h4>{{title}}</h4>
+        <div class="sidebar-admin">
+            <ul class="nav flex-column">
+                <div class="dropdown-divider"></div>
+                
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['lista', 'general']" [routerLinkActive]="['active']">
+                        General
+                    </a>
+                </li>
+
+                <div class="dropdown-divider"></div>
+
+                <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['lista', 'musica']" [routerLinkActive]="['active']">Musica</a>
+                    <a class="nav-link" [routerLink]="['lista', 'pintura']" [routerLinkActive]="['active']">Pintura</a>
+                    <a class="nav-link" [routerLink]="['lista', 'danza']" [routerLinkActive]="['active']">Danza</a>
+                    <a class="nav-link" [routerLink]="['lista', 'cine']"  [routerLinkActive]="['active']">Cine</a>
+                    <a class="nav-link" [routerLink]="['lista', 'literatura']" [routerLinkActive]="['active']">Literatura</a>
+                    <a class="nav-link" [routerLink]="['lista', 'arquitectura']" [routerLinkActive]="['active']">Arquitectura</a>
+                    <a class="nav-link" [routerLink]="['lista', 'escultura']" [routerLinkActive]="['active']">Escultura</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-md-10" style="padding: 2%;">
+        <router-outlet></router-outlet>
+    </div>
+</div>

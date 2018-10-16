@@ -1,0 +1,332 @@
+<div class="col-md-12">
+    <h3>{{title}}</h3> 
+    <hr>
+    <div class="alert alert-success" role="alert" *ngIf="status_general == 'success'">
+        Nuevo evento: <strong> {{event.title}} </strong> ha sido agregado.
+        <br>
+        <a class="btn btn-success btn-sm" [routerLink]="['/admin-panel/ver-detalles-evento', eventId]">Ver evento agregado</a>
+        <a class="btn btn-primary btn-sm" [routerLink]="['/admin-panel/listado-eventos']">Ver lista eventos</a>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="status_general == 'repeated-event'">
+        Ya existe un evento llamado: <strong> {{event.title}}</strong>. Intenta con otro nombre.
+    </div>
+    <!-- Formulario -->
+    <!--<form class="was-validated" *ngIf="mostrar_form" #form="ngForm" (ngSubmit)="submit()">-->
+    <form *ngIf="mostrar_form" #form="ngForm" (ngSubmit)="updateEvent()">
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Titulo <strong> (*) </strong> 
+                    </span>
+                </div>                
+                <input type="text" class="form-control" #title="ngModel" [(ngModel)]="event.title" 
+                id="titulo" name="titulo" required pattern="[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+                                
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!title.valid && title.touched">
+                Introduce un <strong>titulo válido</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="select">Clasificación <strong> (*) </strong> </label>
+            </div>
+            <select class="custom-select" id="select" (change)="clasificationSelected($event.target)" [value]="_clasificationSelected">
+                <option value="{{clasification}}" *ngFor="let clasification of clasifications_names">
+                    {{clasification}}
+                </option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Tipo <strong> (*) </strong>
+                    </span>
+                </div>
+                <input type="text" class="form-control" #type="ngModel" [(ngModel)]="event.type" 
+                id="tipo" name="tipo" required pattern="[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!type.valid && type.touched">
+                Introduce un <strong>tipo de evento</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <h6>Artistas participantes (*)</h6>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addArtist" title="Agregar artista">
+                ➕ Agregar Artista
+            </a>
+        </div>
+
+        <div class="form-group">
+            <div class="alert alert-success" role="alert" *ngIf="status_saveArtist == 'success'">
+                <strong> Nuevo artista agregado. </strong>
+            </div>
+            <div class="alert alert-success" role="alert" *ngIf="status_saveArtist == 'edited'">
+                <strong>Artista editado.</strong>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="status_saveArtist == 'repeated'">
+                <strong> Ya existe un artista con el nombre que introduciste. </strong>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="status_saveArtist == 'invalid_name'">
+                <strong> Introduce un nombre válido. </strong>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="status_saveArtist == 'deleted'">
+                <strong> Artista eliminado. </strong>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="status_saveArtist == 'empty'">
+                <strong> No hay artistas, agrega a través del botón. </strong>
+            </div>
+        </div>
+
+        <div class="form-group" *ngFor="let artist of artists; index as i">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Artista {{i+1}}:
+                    </span>
+                </div>
+                <input type="text" class="form-control" readonly="readonly"
+                id="artista" name="artista" required pattern="[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[:0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+"  
+                placeholder="{{artist}}" id="{{artist}}">
+                <a class="btn btn-warning btn-sm" (click)="editArtist(artist)" title="Editar">
+                    📝
+                </a>
+                <a class="btn btn-danger btn-sm" (click)="deleteArtistMessage(artist)" title="Eliminar">
+                    ❌
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Ciudad <strong> (*) </strong>
+                    </span>
+                </div>
+                <input type="text" class="form-control" #city="ngModel" [(ngModel)]="event.city" 
+                id="ciudad" name="ciudad" required pattern="[:.,0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[:.,0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[:.,0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!city.valid && city.touched">
+                Introduce la  <strong>ciudad</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Dirección <strong> (*) </strong>
+                    </span>
+                </div>
+                <input type="text" class="form-control" #place="ngModel" [(ngModel)]="event.place" 
+                id="direccion" name="direccion" required pattern="[:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!place.valid && place.touched">
+                Introduce una <strong>dirección</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Fecha <strong> (*) </strong>
+                    </span>
+                </div> 
+                <a class="btn btn-danger btn-sm" (click)="open()">🗓️</a>
+                <input class="form-control" #dayPicker="dpDayPicker" [dpDayPicker]="config" name="formated_" [(ngModel)]="selectedDate"/>
+                <input class="form-control" name="formated" placeholder="{{selectedDate_formated}}" readonly [disabled]="true"/>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="selectedDate_formated == 'Invalid date'">
+                Introduce una <strong>fecha válida</strong>.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Hora <strong> (*) </strong>
+                    </span>
+                </div>
+                <input type="time" class="form-control" #hora="ngModel" name="hora" [(ngModel)]="hour" required="required" value="{{hour}}"/> 
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!hora.valid">
+                Introduce una <strong>hora válida</strong>.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        Pagina Web: 
+                    </span>
+                </div>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        https://
+                    </span>
+                </div>
+                <input class="form-control" #paginaweb="ngModel" name="pagina_web" [(ngModel)]="event.webpage" required="required"
+                    pattern="[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!paginaweb.valid && paginaweb.touched">
+                Introduce una <strong>página web válida</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    Descripcion: 
+                </span>
+                <textarea class="form-control" name="descripcion" id="descripcion" rows="3" style="resize: none" [(ngModel)]="event.description"></textarea>
+            </div> 
+        </div>
+
+        <div class="form-group" *ngIf="event.image">
+            <img class="img-thumbnail img-fluid mx-auto d-block" src="{{urlImage}}" alt="Imagen cargada" style="max-width: 30%; max-height: 30%;" >
+        </div>
+
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Imagen:</span>
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input"  name="file" id="file" (change)="fileChangeEvent($event)">
+                    <label class="custom-file-label" for="file">Seleccionar</label>
+                </div>
+            </div>
+            <div class="alert alert-success" *ngIf="imageSelect">
+                Nueva imagen seleccionada.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Actualizar" class="btn btn-primary" [disabled]="!form.form.valid">
+        </div>
+    </form>
+</div>
+
+<!-- hidden buttons for modals windows -->
+<button id="confirm_delete" [hidden]="true" data-toggle="modal" data-target="#confirmDelete">Open Modal</button>
+<button id="editar_artista" [hidden]="true" data-toggle="modal" data-target="#edit_artist">Open Modal</button>
+
+<!-- Modal to add artist-->
+<div class="modal fade" id="addArtist" tabindex="-1" role="dialog" aria-labelledby="addArtist" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="addArtist">Agregar nuevo artista...</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+        <form #formArtista="ngForm">
+            <div class="form-group">
+                <label for="recipient-name" class="col-form-label">Nombre:</label>
+                <input class="form-control" #nameArtist="ngModel" name="name_artist" [(ngModel)]="name_new_artist" 
+                required="required" pattern="[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="!nameArtist.valid">
+                Introduce un <strong>nombre valido</strong>. No se permiten espacios en blanco al inicio o al final.
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary"  data-dismiss="modal" (click)="saveNewArtist(formArtista.form.valid)" [disabled]="!formArtista.form.valid">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+
+<!-- Modal to save artist-->
+<!--
+<div class="modal fade" id="savedArtist" tabindex="-1" role="dialog" aria-labelledby="savedArtist" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="addArtist">Exito</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>Nuevo artista {{name_new_artist}} agregado</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary"  data-dismiss="modal" (click)="saveNewArtist(formArtista.form.valid)" [disabled]="!formArtista.form.valid">Aceptar</button>
+        </div>
+        </div>
+    </div>
+</div>
+-->
+
+<!-- Modal to confirm delete artist-->
+<div class="modal fade" id="confirmDelete" tabindex="-1" role="dialog" aria-labelledby="confirmDelete   " aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="addArtist">Quitar de la lista de artistas</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>¿Eliminar a <strong>{{name_new_artist}} </strong> ?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger"  data-dismiss="modal" (click)="deleteArtistConfirm()">Eliminar</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit_artist" tabindex="-1" role="dialog" aria-labelledby="confirmDelete" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="addArtist">Editar nombre</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form #formArtista="ngForm">
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" #nameArtist="ngModel" name="name_artist" [(ngModel)]="name_new_artist" 
+                        pattern="[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+(\s*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]*)*[/-_:.,#0-9a-zA-ZÀ-ÿ\u00f1\u00d1]+">
+                </div>
+                <div class="alert alert-danger" role="alert" *ngIf="!nameArtist.valid && nameArtist.touched">
+                    Introduce un <strong>nombre valido</strong>. No se permiten números, espacios en blanco al inicio o al final.
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary"  data-dismiss="modal" (click)="artistEdited()" [disabled]="!formArtista.form.valid">Aceptar</button>
+        </div>
+        </div>
+    </div>
+</div>
+    
+    
+    

@@ -1,0 +1,17 @@
+.carousel-caption{ 
+    margin-bottom: 15%;
+}
+
+.carousel{
+    padding-top: 7px;
+}
+
+a{
+    margin-right: 2%;
+}
+
+@include media-breakpoint-up(sm) { 
+    .carousel-caption{
+        margin-bottom: 1%; 
+    }
+}

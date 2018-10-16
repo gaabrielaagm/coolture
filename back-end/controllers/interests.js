@@ -69,7 +69,7 @@ function get(req, res){
                 if(!issetInterests){
                     res.status(404).send({message: 'No hay un registro de los intereses del usuario'});
                 }else{
-                    res.status(200).send({ issetInterests });
+                    res.status(200).send({ interests: issetInterests });
                 }
             }
         }

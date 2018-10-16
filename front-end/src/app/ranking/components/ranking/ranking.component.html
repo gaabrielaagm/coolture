@@ -1,0 +1,88 @@
+<h4>{{title}}</h4>
+<hr>
+<div class="container-fluid" *ngIf="events != null">
+    <p *ngIf="events.length == 0">No hay eventos de este tipo</p>
+    <div class="col-md-12"> 
+        <table class="table table-hover text-center" *ngIf="events.length > 0">
+            <thead class="thead-dark">
+                <tr class="d-flex">
+                    <th class="col-md-2 col-sm-1">Top</th>
+                    <th class="col-md-4 col-sm-1">Título</th>
+                    <th class="col-md-2 col-sm-1">Clasificacion</th>
+                    <th class="col-md-2 col-sm-1">Tipo</th>
+                    <th class="col-md-2 col-sm-1">Participantes</th>
+                </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let event of events; let i = index"> 
+                    <tr class="d-flex" *ngIf="i < 10">
+                            <th class="col-md-2 col-sm-1" scope="row">{{i+1}}</th>
+                            <td class="col-md-4 col-sm-1"><a data-toggle="modal" href="#modal-view-{{event._id}}" (click)="getViewEvent(event._id)" title="Ver detalles">{{ event.title | titlecase }}</a></td>
+                            <td class="col-md-2 col-sm-1">{{ event.clasification | titlecase }}</td>
+                            <td class="col-md-2 col-sm-1">{{ event.type | titlecase }}</td>
+                            <th class="col-md-2 col-sm-1">{{ event.assistances}}</th>
+                    </tr>
+                    <!-- View modal-->
+                    <div class="modal fade" id="modal-view-{{event._id}}" role="dialog" aria-hidden="true">
+                    <div class="">
+                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">
+                                        <strong>{{view_event.title}}</strong>
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <ng-container *ngIf="view_event.image">
+                                    <a href="{{urlImage+view_event.image}}" title="Ver banner" target="_blank" style="padding-top: 3%;"> 
+                                        <img class="card-img-top img-thumbnail img-fluid mx-auto d-block ml-3 mr-3" src="{{urlImage+view_event.image}}" alt="Imagen evento" style="max-width: 94%; max-height: 600px;"> 
+                                    </a>
+                                </ng-container>
+                                
+                                <div class="modal-body ml-3 mr-3" *ngIf="view_event.image != ''">
+                                    <p class="card-text" title="Clasificación"> <i class="material-icons">label</i> {{ view_event.clasification | titlecase }} </p>
+                                    <p class="card-text" title="Tipo"> <i class="material-icons">label_important</i> {{ view_event.type | titlecase }} </p>
+                                    <p class="card-text" title="Lugar/Dirección"> <i class="material-icons">place</i> {{ view_event.place | titlecase }}  </p>
+                                    <p class="card-text" title="Fecha"> <i class="material-icons">date_range</i> {{ view_event.date | date:'longDate' }}  </p>
+                                    <p class="card-text" title="Hora"> <i class="material-icons">access_time</i> {{ view_event.hour}}</p>
+                                    <p class="card-text" title="Página web"> <i class="material-icons">link</i> <a href="https://{{view_event.webpage}}" target="_blank"> &nbsp; {{ view_event.webpage }}</a> </p>
+                                    <p class="card-text" title="Costo/Precio"> <i class="material-icons">local_offer</i> &nbsp; Sin costo </p>
+                                    <ng-container class="card-text" title="Artistas/Actores/Participantes"> 
+                                        <i class="material-icons">people</i> 
+                                        <ul class="card-text" style="list-style: none;"> 
+                                            <ng-container *ngFor="let view_artist of view_event.artists; i as index" style="display:inline">
+                                                <li><a data-toggle="modal" href="#modal-artist" (click)="showInfoArtist(view_artist)"> {{  view_artist   + "    " | titlecase }} </a></li>
+                                            </ng-container>
+                                        </ul>
+                                    </ng-container>
+                                    
+                                    <p class="card-text" style="text-align: justify;" title="Descripción"> <i class="material-icons">description</i>
+                                        {{ view_event.description }}
+                                    </p>
+                                </div>
+                                
+                                <div class="modal-footer">
+                                    <ng-container *ngIf="identity != null">
+                                        <button class="btn btn-sm btn-secondary" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedAssistance(view_event._id)"> 
+                                            <span *ngIf="!checked_assistance"> No Asistiré </span> 
+                                            <span *ngIf="checked_assistance"> ✅ Sí Asistiré </span> 
+                                        </button>
+
+                                        <button class="btn btn-sm btn-dark" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedFavorite(view_event._id)">                               
+                                            <span *ngIf="checked_favorite"> ⭐ Mis Favoritos </span> 
+                                            <span *ngIf="!checked_favorite"> Agregar a Favoritos </span>    
+                                        </button>
+                                    </ng-container>
+                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>

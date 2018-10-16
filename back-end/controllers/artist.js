@@ -18,15 +18,12 @@ function saveEvent(req, res){
     var params = req.body;
     console.log(params);
 
-    if(params.name && params.description){
+    if(params.name){
         artist.name = params.name;
         artist.description = params.description;
         artist.webpage = params.webpage;
-        artist.social_red = {
-            fb : params.fb, tw : params.tw, in : params.in
-        };
         artist.image = "defaultArtist.png";
-        artist.delete = false;
+        artist.del = false;
         
         Artist.findOne({name: artist.name}, (err, issetArtist) => {
             if(err){
@@ -63,7 +60,7 @@ function saveEvent(req, res){
 }
 
 function getArtists(req, res){
-    Artist.find({delete: false}).exec((err, artists) =>{
+    Artist.find({del: false}).exec((err, artists) =>{
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{
@@ -80,7 +77,7 @@ function getArtist(req, res){
     var value = req.params.value;
     var searchBy = req.params.search;
     if(searchBy == "id"){ 
-        Artist.find( { _id: value, delete: false } ).exec((err, artist) =>{
+        Artist.find( { _id: value, del: false } ).exec((err, artist) =>{
             if(err){
                 res.status(500).send({message: 'No se encontró artista'});
             }else{
@@ -93,7 +90,7 @@ function getArtist(req, res){
         });
     }else{
         if(searchBy == "name"){ 
-            Artist.find( { name: value, delete: false } ).exec((err, artist) =>{
+            Artist.find( { name: value, del: false } ).exec((err, artist) =>{
                 if(err){
                     res.status(500).send({message: 'No se encontró artista'});
                 }else{
@@ -130,7 +127,7 @@ function updateArtist(req, res){
 function deleteArtist(req, res){
     var artistId = req.params.id;
 
-    Artist.findByIdAndUpdate(artistId, {delete: true}, {new: true}, (err, artistRemoved) => {
+    Artist.findByIdAndUpdate(artistId, {del: true}, {new: true}, (err, artistRemoved) => {
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{

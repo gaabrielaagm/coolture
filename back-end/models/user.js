@@ -10,7 +10,7 @@ var userSchema = Schema({
     email: String,
     role: String,
     image: String,
-    notify: String,
+    notify: Boolean,
     del: Boolean
     },
     { versionKey: false }

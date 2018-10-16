@@ -1,0 +1,25 @@
+.active{
+    border-left: 4px solid #7C4DFF;
+    color: #7C4DFF;
+}
+
+.nav-item .nav-link{
+    color: #212121;
+    margin-bottom: 1.5%;
+    height: 40px;
+    max-height: 40px;
+    
+}
+
+.nav-item .nav-link:hover{
+    border-left: 4px solid #7C4DFF;
+    color: #7C4DFF;
+}  
+
+.row {
+    color: #212121;
+}
+
+.dropdown{
+    color: #212121;
+}

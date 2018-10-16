@@ -17,7 +17,7 @@ function addAssistance(req, res){
     newAssistance.user = userId;
     newAssistance.date_yes = moment();
     newAssistance.date_no = null;
-    newAssistance.delete = false;
+    newAssistance.del = false;
 
     Assistaces.findOne({event : eventId, user: userId}, 
         (err, issetAssistance) => {
@@ -41,14 +41,14 @@ function addAssistance(req, res){
                         }
                     });
                 }else{
-                    Assistaces.findOneAndUpdate({event : eventId, user : userId}, {delete: false, date_yes: moment()}, {new: true}, (err, AssistanceRemoved) => {
+                    Assistaces.findOneAndUpdate({event : eventId, user : userId}, {del: false, date_yes: moment()}, {new: true}, (err, AssistanceRemoved) => {
                         if(err){
                             res.status(500).send({message: 'Error en la petición'});
                         }else{
                             if(!AssistanceRemoved){
                                 res.status(404).send({message: 'No se ha podido actualizar la asistencia'});
                             }else{
-                                res.status(200).send({ message: "Asistencia registrada", asistencia: AssistanceRemoved });
+                                res.status(200).send({ message: "Asistencia registrada", assistance: AssistanceRemoved });
                             }
                         }
                     });
@@ -62,14 +62,31 @@ function deleteAssistance(req, res){
     var eventId = req.params.event;
     var userId = req.params.user;
 
-    Assistaces.findOneAndUpdate({event : eventId, user : userId}, {delete: true, date_no: moment()}, {new: true}, (err, AssistanceRemoved) => {
+    Assistaces.findOneAndUpdate({event : eventId, user : userId}, {del: true, date_no: moment()}, {new: true}, (err, AssistanceRemoved) => {
         if(err){
             res.status(500).send({message: 'Error en la petición'});
         }else{
             if(!AssistanceRemoved){
                 res.status(404).send({message: 'No se ha podido borrar la asistencia'});
             }else{
-                res.status(200).send({ message: "Asistencia eliminada", asistencia: AssistanceRemoved });
+                res.status(200).send({ message: "Asistencia eliminada", assistance: AssistanceRemoved });
+            }
+        }
+    });
+}
+
+function verificationAssistance(req, res){
+    var eventId = req.params.event;
+    var userId = req.params.user;
+
+    Assistaces.findOne({event : eventId, user : userId, del: false}, (err, AssistanceVerified) => {
+        if(err){
+            res.status(500).send({message: 'Error en la petición'});
+        }else{
+            if(!AssistanceVerified){
+                res.status(200).send({ exist: false, assistance: AssistanceVerified });
+            }else{
+                res.status(200).send({ exist: true, assistance: AssistanceVerified });
             }
         }
     });
@@ -103,7 +120,8 @@ function getCurrentAssistancesUser(req, res){
         {
             $match : {
                 user : userId,
-                "event_.date" : { $gte : currentDate }
+                "event_.date" : { $gte : currentDate },
+                del : false
             }
         },
         {
@@ -148,7 +166,8 @@ function getPastAssistancesUser(req, res){
         {
             $match : {
                 user : userId,
-                "event_.date" : { $lt : currentDate }
+                "event_.date" : { $lt : currentDate },
+                del : false
             }
         },
         {
@@ -177,6 +196,7 @@ function getAssistancesEvent(req, res){
 module.exports = {
     addAssistance,
     deleteAssistance,
+    verificationAssistance,
     getCurrentAssistancesUser,
     getPastAssistancesUser,
     getAssistancesEvent

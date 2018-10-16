@@ -12,7 +12,7 @@ var api = express.Router();
 // cargamos el middleware
 var md_auth = require('../middlewares/authenticated'); //esto es un objeto y tenemos un método ensureAuth que se puede usar en cualquier ruta
 var multipart = require('connect-multiparty');
-var md_upload = multipart({ uploadDir: './uploads/artist'});
+var md_upload = multipart({ uploadDir: './uploads/artists'});
 var md_admin = require('../middlewares/is_admin');
 
 //se crean rutas personalizadas 
@@ -21,8 +21,10 @@ api.post('/artist', [md_auth.ensureAuth, md_admin.isAdmin], ArtistController.sav
 api.get('/artists', ArtistController.getArtists);
 api.get('/artist/:search/:value', ArtistController.getArtist); /* seach: 1)name 2)id */
 api.put('/artist/:id', [md_auth.ensureAuth, md_admin.isAdmin], ArtistController.updateArtist);
-api.post('/image-artist/:id', [md_auth.ensureAuth, md_upload], ArtistController.uploadImage);
+api.put('/image-artist/:id', md_upload, ArtistController.uploadImage);
+//api.put('/image-artist/:id', [md_auth.ensureAuth, md_upload], ArtistController.uploadImage);
 api.get('/image-artist/:imageFile', ArtistController.getImageFile);
+api.delete('/artist/:id', ArtistController.deleteArtist);
 
 //exportamos el objeto api con la configuración de las rutas
 module.exports = api;

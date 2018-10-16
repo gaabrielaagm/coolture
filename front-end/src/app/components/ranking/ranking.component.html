@@ -1,1 +1,36 @@
-{{title}}
+<h4>{{title}}</h4>
+<hr>
+<div class="container-fluid">
+    <!--
+    <div class="input-group mb-3" style="margin-top:2%; margin-bottom:15%;">
+        <input type="text" class="form-control" placeholder="Buscador..." [(ngModel)]="to_search" >
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Filtrar</button>
+        </div>
+    </div>
+    -->
+    <div class="col-md-10"> 
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Top</th>
+                <th scope="col">Título</th>
+                <th scope="col">Clasificacion</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Participantes</th>
+            </tr>
+            </thead>
+            <tbody>
+                <ng-container *ngFor="let event of events; let i = index"> 
+                <tr *ngIf="i < 10">
+                        <th scope="row">{{i+1}}</th>
+                        <td><a [routerLink]="['/eventos/detalle-evento', event._id]" title="Ver detalles">{{ event.title | titlecase }}</a></td>
+                        <td>{{ event.clasification | titlecase }}</td>
+                        <td>{{ event.type | titlecase }}</td>
+                        <td>{{ event.assistances}}</td>
+                </tr>
+                </ng-container>
+            </tbody>
+        </table>
+    </div>
+</div>
