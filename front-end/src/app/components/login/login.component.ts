@@ -58,7 +58,7 @@ export class LoginComponent {
                                 localStorage.setItem('token', this.token); //token no ocupa stringify porque ya es un string
                                 // console.log(localStorage.getItem('token'));
                                 // console.log(localStorage.getItem('identity'));
-                                this._router.navigate(['/']);
+                                this._router.navigate(['/home']);
                             }
                         },
                         error => {

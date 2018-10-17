@@ -46,6 +46,10 @@ export class RankingComponent {
     ngOnInit(): void {
         console.log('RankingComponent loaded...');
         this.events = null;
+        this.getEvents();
+    }
+
+    getEvents(){
         this._route.params.forEach((params: Params) => {
             this.typeRanking = params['tipo'];
             console.log(this.typeRanking);

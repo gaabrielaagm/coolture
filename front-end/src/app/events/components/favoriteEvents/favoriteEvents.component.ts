@@ -10,7 +10,7 @@ import { Event } from '../../../models/event';
 @Component({
     selector: 'favoriteEvents',
     templateUrl: './favoriteEvents.component.html',
-    styleUrls: ['./favoriteEvents.component.css'],
+    styleUrls: ['../currentEvents/currentEvents.component.css'],
     providers: [UserService, FavoriteService, EventService, AssistanceService]
 })
 export class FavoriteEventsComponent {
@@ -25,6 +25,9 @@ export class FavoriteEventsComponent {
     public view_event : Event;
     public checked_assistance;
     public checked_favorite;
+    public view_type : String;
+    public items_size;
+    public items_showed;
 
     constructor(
         private _route: ActivatedRoute,
@@ -41,11 +44,22 @@ export class FavoriteEventsComponent {
         this.url = GLOBAL.url;
         this.urlImage = this.url+'image-event/';
         this.view_event = new Event('','','',[],'','','','','',null,'',null,null,'');
+        this.view_type = 'card';
+        this.items_showed = 5;
     }
 
     ngOnInit(): void {
         console.log('FavoriteEventsComponent loaded...');
-        
+        this.getFavorites();
+    }
+
+    ngDoCheck(): void {
+        //Called every time that the input properties of a component or a directive are checked. Use it to extend change detection by performing a custom check.
+        //Add 'implements DoCheck' to the class.
+        //console.log(this.view_type);
+    }
+
+    getFavorites(){
         this._route.params.forEach((params: Params) => {
             this.time = params['tiempo'];
 
@@ -70,6 +84,7 @@ export class FavoriteEventsComponent {
                 }else{
                     console.log(response.favorites);
                     this.events = response.favorites;
+                    this.items_size = this.events.length;
                 }
             },
             error => {
@@ -86,6 +101,7 @@ export class FavoriteEventsComponent {
                 }else{
                     //console.log(response.favorites);
                     this.events = response.favorites;
+                    this.items_size = this.events.length;
                 }
             },
             error => {
@@ -102,6 +118,7 @@ export class FavoriteEventsComponent {
                 }else{
                     //console.log(response.favorites);
                     this.events = response.favorites;
+                    this.items_size = this.events.length;
                 }
             },
             error => {
@@ -246,5 +263,17 @@ export class FavoriteEventsComponent {
                 }
             );
         }
+    }
+
+    viewType(type){
+        this.view_type = type;
+        console.log(this.view_type);
+    }
+
+    incrementItems(type){
+        if(type == 'increment')
+            this.items_showed = this.items_showed + 5;
+        else
+            this.items_showed = this.items_size;
     }
 }

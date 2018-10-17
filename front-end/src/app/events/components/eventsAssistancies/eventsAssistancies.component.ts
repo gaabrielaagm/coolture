@@ -10,7 +10,7 @@ import { Event } from '../../../models/event';
 @Component({
     selector: 'eventsAssistancies',
     templateUrl: './eventsAssistancies.component.html',
-    styleUrls: ['./eventsAssistancies.component.css'],
+    styleUrls: ['../currentEvents/currentEvents.component.css'], 
     providers: [UserService, EventService, AssistanceService, FavoriteService]
 })
 export class EventsAssistanciesComponent {
@@ -24,6 +24,9 @@ export class EventsAssistanciesComponent {
     public checked_assistance;
     public checked_favorite;
     public urlImage : String;
+    public view_type : String;
+    public items_size;
+    public items_showed;
 
     constructor(
         private _route: ActivatedRoute,
@@ -40,6 +43,8 @@ export class EventsAssistanciesComponent {
         this.urlImage = GLOBAL.url + 'image-event/';
         this.view_event = new Event('','','',[],'','','','','',null,'',null,null,'');
         this.assistances = null;
+        this.view_type = 'card';
+        this.items_showed = 5;
     }
 
     ngOnInit(): void {
@@ -66,6 +71,7 @@ export class EventsAssistanciesComponent {
                 }else{
                     //console.log(response.assistances);
                     this.assistances = response.assistances;
+                    this.items_size = this.assistances.length;
                 }
             },
             error => {
@@ -82,6 +88,7 @@ export class EventsAssistanciesComponent {
                 }else{
                     //console.log(response.assistances);
                     this.assistances = response.assistances;
+                    this.items_size = this.assistances.length;
                 }
             },
             error => {
@@ -226,5 +233,17 @@ export class EventsAssistanciesComponent {
                 }
             );
         }
+    }
+
+    viewType(type){
+        this.view_type = type;
+        console.log(this.view_type);
+    }
+
+    incrementItems(type){
+        if(type == 'increment')
+            this.items_showed = this.items_showed + 5;
+        else
+            this.items_showed = this.items_size;
     }
 }

@@ -23,6 +23,9 @@ export class CurrentEventsComponent {
     public checked_assistance;
     public checked_favorite;
     public to_search : String;
+    public view_type : String;
+    public items_size;
+    public items_showed;
 
     constructor(
         private _userService : UserService,
@@ -39,6 +42,8 @@ export class CurrentEventsComponent {
         this.urlImage = GLOBAL.url + 'image-event/';
         this.view_event = new Event('','','',[],'','','','','',null,'',null,null,'');
         this.to_search = "";
+        this.view_type = 'card';
+        this.items_showed = 5;
         if(this.identity != null)
             this.getCurrentEvents();
     }
@@ -54,6 +59,7 @@ export class CurrentEventsComponent {
                     console.log('Error en la petición');
                 }else{
                     this.events = response.events;
+                    this.items_size = this.events.length;
                     //console.log(this.events);
                 }
             },
@@ -197,5 +203,17 @@ export class CurrentEventsComponent {
                 }
             );
         }
+    }
+
+    viewType(type){
+        this.view_type = type;
+        console.log(this.view_type);
+    }
+
+    incrementItems(type){
+        if(type == 'increment')
+            this.items_showed = this.items_showed + 5;
+        else
+            this.items_showed = this.items_size;
     }
 }

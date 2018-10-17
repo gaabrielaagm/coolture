@@ -4,93 +4,261 @@
     Aún no has señalado eventos a los que asistes
 </div>
 <div class="container" *ngIf="assistances != null"> 
-    
+    <!--
     <div class="input-group mb-3" style="margin-top:2%; margin-bottom:15%;">
         <input type="text" class="form-control" placeholder="Buscador..." [(ngModel)]="to_search" >
         <div class="input-group-append">
             <button class="btn btn-outline-secondary" type="button">Filtrar</button>
         </div>
     </div>
-    
-    <div class="col-md-12">
-        <table class="table">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">Título</th>
-                <th scope="col">Clasificacion</th>
-                <th scope="col">Tipo</th>
-                <th scope="col">Dia</th>
-                <th scope="col">Hora</th>
-            </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let event of assistances | searchAssistance: to_search">
-                    <td><a data-toggle="modal" href="#modal-view-{{event.event_[0]._id}}" (click)="getViewEvent(event.event_[0]._id)" title="Ver detalles">{{ event.event_[0].title | titlecase }}</a></td>
-                    <td>{{ event.event_[0].clasification | titlecase }}</td>
-                    <td>{{ event.event_[0].type | titlecase }}</td>
-                    <td>{{ event.event_[0].date | date:'longDate' }} </td>
-                    <td>{{ event.event_[0].hour}}</td>
-                    <!-- View modal-->
-            <div class="modal fade" id="modal-view-{{event.event_[0]._id}}" role="dialog" aria-hidden="true">
-                    <div class="">
-                        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                            <div class="modal-content">
+    -->
+
+    <div class="row">        
+        <div class="searcher col-md-6 offset-md-3">
+            <div class="input-group mb-3 input-group-sm">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">🔍 Buscar</span>
+                </div>
+                <input type="text" class="form-control form-control-sm" placeholder="" [(ngModel)]="to_search" >
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex flex-row-reverse">
+        <div class="p-1"><button class="btn btn-sm btn-outline-dark" (click)="viewType('list')"><i class="material-icons">format_list_bulleted</i></button></div>
+        <div class="p-1"><button class="btn btn-sm btn-outline-dark" (click)="viewType('card')"><i class="material-icons">view_comfy</i></button></div>
+    </div>
+
+    <ng-container *ngIf="view_type == 'list'">
+        <div class="col-md-12">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr class="d-flex">
+                        <th class="col-4">Título</th>
+                        <th class="col-2">Clasificacion</th>
+                        <th class="col-3">Tipo</th>
+                        <th class="col-2">Dia</th>
+                        <th class="col-1">Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="d-flex" *ngFor="let event of assistances | searchAssistance: to_search; index as i">
+                        <ng-container *ngIf="(i+1) <= items_showed">
+                            <td class="col-4"><a data-toggle="modal" href="#modal-view-{{event.event_[0]._id}}" (click)="getViewEvent(event.event_[0]._id)" title="Ver detalles">{{ event.event_[0].title | titlecase }}</a></td>
+                            <td class="col-2">{{ event.event_[0].clasification | titlecase }}</td>
+                            <td class="col-2">{{ event.event_[0].type | titlecase }}</td>
+                            <td class="col-3">{{ event.event_[0].date | date:'longDate' }} </td>
+                            <td class="col-1">{{ event.event_[0].hour}}</td>
+                        </ng-container>
+                        <!-- Delete modal -->
+                        <div class="modal fade" id="#modal-view-{{event.event_[0]._id}}" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title">
-                                        <strong>{{view_event.title}}</strong>
+                                        ¿Estas seguro de querer eliminar <br> <strong>{{event.title}}</strong>?
                                     </h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>
-                                <ng-container *ngIf="view_event.image">
-                                    <a href="{{urlImage+view_event.image}}" title="Ver banner" target="_blank" style="padding-top: 3%;"> 
-                                        <img class="card-img-top img-thumbnail img-fluid mx-auto d-block ml-3 mr-3" src="{{urlImage+view_event.image}}" alt="Imagen evento" style="max-width: 94%; max-height: 600px;"> 
-                                    </a>
-                                </ng-container>
-                                
-                                <div class="modal-body ml-3 mr-3" *ngIf="view_event.image != ''">
-                                    <p class="card-text" title="Clasificación"> <i class="material-icons">label</i> {{ view_event.clasification | titlecase }} </p>
-                                    <p class="card-text" title="Tipo"> <i class="material-icons">label_important</i> {{ view_event.type | titlecase }} </p>
-                                    <p class="card-text" title="Lugar/Dirección"> <i class="material-icons">place</i> {{ view_event.place | titlecase }}  </p>
-                                    <p class="card-text" title="Fecha"> <i class="material-icons">date_range</i> {{ view_event.date | date:'longDate' }}  </p>
-                                    <p class="card-text" title="Hora"> <i class="material-icons">access_time</i> {{ view_event.hour}}</p>
-                                    <p class="card-text" title="Página web"> <i class="material-icons">link</i> <a href="https://{{view_event.webpage}}" target="_blank"> &nbsp; {{ view_event.webpage }}</a> </p>
-                                    <p class="card-text" title="Costo/Precio"> <i class="material-icons">local_offer</i> &nbsp; Sin costo </p>
-                                    <ng-container class="card-text" title="Artistas/Actores/Participantes"> 
-                                        <i class="material-icons">people</i> 
-                                        <ul class="card-text" style="list-style: none;"> 
-                                            <ng-container *ngFor="let view_artist of view_event.artists; i as index" style="display:inline">
-                                                <li><a data-toggle="modal" href="#modal-artist" (click)="showInfoArtist(view_artist)"> {{  view_artist   + "    " | titlecase }} </a></li>
-                                            </ng-container>
-                                        </ul>
-                                    </ng-container>
-                                    
-                                    <p class="card-text" style="text-align: justify;" title="Descripción"> <i class="material-icons">description</i>
-                                        {{ view_event.description }}
-                                    </p>
+                                <div class="modal-body">
+                                    Si eliminas el evento ya no podrás recuperarlo.
                                 </div>
-                                
                                 <div class="modal-footer">
-                                    <ng-container *ngIf="identity != null">
-                                        <button class="btn btn-sm btn-secondary" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedAssistance(view_event._id)"> 
-                                            <span *ngIf="!checked_assistance"> No Asistiré </span> 
-                                            <span *ngIf="checked_assistance"> ✅ Sí Asistiré </span> 
-                                        </button>
-        
-                                        <button class="btn btn-sm btn-dark" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedFavorite(view_event._id)">                               
-                                            <span *ngIf="checked_favorite"> ⭐ Mis Favoritos </span> 
-                                            <span *ngIf="!checked_favorite"> Agregar a Favoritos </span>    
-                                        </button>
-                                    </ng-container>
-                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cancelar</a>
+                                    <a class="btn btn-danger btn-sm" data-dismiss="modal" (click)="deleteEvent(event._id)">Eliminar</a>
+                                </div>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- View modal-->
+                        <div class="modal fade" id="modal-view-{{event.event_[0]._id}}" role="dialog" aria-hidden="true">
+                        <div class="">
+                            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <strong>{{view_event.title}}</strong>
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <ng-container *ngIf="view_event.image">
+                                        <a href="{{urlImage+view_event.image}}" title="Ver banner" target="_blank" style="padding-top: 3%;"> 
+                                            <img class="card-img-top img-thumbnail ml-3 mr-3" src="{{urlImage+view_event.image}}" alt="Imagen evento" style="max-width: 94%; max-height: 500px;"> 
+                                        </a>
+                                    </ng-container>
+                                    
+                                    <div class="modal-body ml-3 mr-3" *ngIf="view_event.image != ''">
+                                        <p class="card-text" title="Clasificación"> <i class="material-icons">label</i> {{ view_event.clasification | titlecase }} </p>
+                                        <p class="card-text" title="Tipo"> <i class="material-icons">label_important</i> {{ view_event.type | titlecase }} </p>
+                                        <p class="card-text" title="Lugar/Dirección"> <i class="material-icons">place</i> {{ view_event.place | titlecase }}  </p>
+                                        <p class="card-text" title="Fecha"> <i class="material-icons">date_range</i> {{ view_event.date | date:'longDate' }}  </p>
+                                        <p class="card-text" title="Hora"> <i class="material-icons">access_time</i> {{ view_event.hour}}</p>
+                                        <p class="card-text" title="Página web"> <i class="material-icons">link</i> <a href="https://{{view_event.webpage}}" target="_blank"> &nbsp; {{ view_event.webpage }}</a> </p>
+                                        <p class="card-text" title="Costo/Precio"> <i class="material-icons">local_offer</i> &nbsp; Sin costo </p>
+                                        <ng-container class="card-text" title="Artistas/Actores/Participantes"> 
+                                            <i class="material-icons">people</i> 
+                                            <ul class="card-text" style="list-style: none;"> 
+                                                <ng-container *ngFor="let view_artist of view_event.artists; i as index" style="display:inline">
+                                                    <li><a data-toggle="modal" href="#modal-artist" (click)="showInfoArtist(view_artist)"> {{  view_artist   + "    " | titlecase }} </a></li>
+                                                </ng-container>
+                                            </ul>
+                                        </ng-container>
+                                        
+                                        <p class="card-text" style="text-align: justify;" title="Descripción"> <i class="material-icons">description</i>
+                                            {{ view_event.description }}
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <ng-container *ngIf="identity != null">
+                                            <button class="btn btn-sm btn-secondary" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedAssistance(view_event._id)"> 
+                                                <span *ngIf="!checked_assistance"> No Asistiré </span> 
+                                                <span *ngIf="checked_assistance"> ✅ Sí Asistiré </span> 
+                                            </button>
+            
+                                            <button class="btn btn-sm btn-dark" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedFavorite(view_event._id)">                               
+                                                <span *ngIf="checked_favorite"> ⭐ Mis Favoritos </span> 
+                                                <span *ngIf="!checked_favorite"> Agregar a Favoritos </span>    
+                                            </button>
+                                        </ng-container>
+                                        <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+
+                        <!-- Artist modal-->
+                        <div class="modal fade" id="modal-artist" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">
+                                            <strong>Artista: </strong>{{title_artist}}
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="modal-body">
+
+                                    </div>
+                                    
+                                    <div class="modal-footer">
+                                        <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="view_type == 'card'">
+        <div class="row">
+            <div class="col-md-4" *ngFor="let event of assistances | searchAssistance: to_search; index as i">
+                <div *ngIf="(i+1) <= items_showed" class="card profile-card-2" [ngClass]="{
+                                                                borderPurple: event.event_[0].clasification == 'Musica',
+                                                                borderYellow: event.event_[0].clasification == 'Pintura',
+                                                                borderBlue: event.event_[0].clasification == 'Danza',
+                                                                borderOrange: event.event_[0].clasification == 'Cine',
+                                                                borderGreen: event.event_[0].clasification == 'Literatura',
+                                                                borderRed: event.event_[0].clasification == 'Arquitectura',
+                                                                borderBlaxk: event.event_[0].clasification == 'Escultura'
+                                                            }">
+                    <div class="card-img-block">
+                        <img class="img-fluid" src="{{urlImage+event.event_[0].image}}" alt="Card image cap">
                     </div>
+                    <div class="card-body pt-5">
+                        <img src="../../../../assets/images/default{{event.event_[0].clasification}}.png" alt="profile-image" class="profile"/>
+                        <h5 class="card-title">{{ event.event_[0].title | titlecase }} </h5>
+                        <p class="card-text"> <strong> {{ event.event_[0].clasification | titlecase }}/{{ event.type | titlecase }} </strong> </p>
+                        <p class="card-text"> {{ event.event_[0].date | date:'longDate' }} | {{ event.hour }} Hrs</p>
+                        <div class="icon-block">
+                            <a data-toggle="modal" href="#modal-view-{{event.event_[0]._id}}" (click)="getViewEvent(event.event_[0]._id)" title="Ver detalles" class="btn btn-sm btn-primary" style="margin:2px;">📄 Ver detalles</a>
+                            <ng-container *ngIf="identity != null">
+                                <a [routerLink]="['/admin-panel/editar-evento', event._id]" routerLinkActive="router-link-active" class="btn btn-sm btn-warning" *ngIf="identity.role == 'ROLE_ADMIN'" style="margin:2px;">✏️ Editar</a>
+                            </ng-container>
+                        </div>
                     </div>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                </div>
+                <!--<p class="mt-3 w-100 float-left text-center"><strong>Social Profile Card</strong></p>-->
+
+                <!-- View modal-->
+                <div class="modal fade" id="modal-view-{{event.event_[0]._id}}" role="dialog" aria-hidden="true">
+                <div class="">
+                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <strong>{{view_event.title}}</strong>
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <ng-container *ngIf="view_event.image">
+                                <a href="{{urlImage+view_event.image}}" title="Ver banner" target="_blank" style="padding-top: 3%;"> 
+                                    <img class="card-img-top img-thumbnail img-fluid mx-auto d-block ml-3 mr-3" src="{{urlImage+view_event.image}}" alt="Imagen evento" style="max-width: 94%; max-height: 600px;"> 
+                                </a>
+                            </ng-container>
+                            
+                            <div class="modal-body ml-3 mr-3" *ngIf="view_event.image != ''">
+                                <p class="card-text" title="Clasificación"> <i class="material-icons">label</i> {{ view_event.clasification | titlecase }} </p>
+                                <p class="card-text" title="Tipo"> <i class="material-icons">label_important</i> {{ view_event.type | titlecase }} </p>
+                                <p class="card-text" title="Lugar/Dirección"> <i class="material-icons">place</i> {{ view_event.place | titlecase }}  </p>
+                                <p class="card-text" title="Fecha"> <i class="material-icons">date_range</i> {{ view_event.date | date:'longDate' }}  </p>
+                                <p class="card-text" title="Hora"> <i class="material-icons">access_time</i> {{ view_event.hour}}</p>
+                                <p class="card-text" title="Página web"> <i class="material-icons">link</i> <a href="https://{{view_event.webpage}}" target="_blank"> &nbsp; {{ view_event.webpage }}</a> </p>
+                                <p class="card-text" title="Costo/Precio"> <i class="material-icons">local_offer</i> &nbsp; Sin costo </p>
+                                <ng-container class="card-text" title="Artistas/Actores/Participantes"> 
+                                    <i class="material-icons">people</i> 
+                                    <ul class="card-text" style="list-style: none;"> 
+                                        <ng-container *ngFor="let view_artist of view_event.artists; index as i" style="display:inline">
+                                            <li><a data-toggle="modal" href="#modal-artist" (click)="showInfoArtist(view_artist)"> {{  view_artist   + "    " | titlecase }} </a></li>
+                                        </ng-container>
+                                    </ul>
+                                </ng-container>
+                                
+                                <p class="card-text" style="text-align: justify;" title="Descripción"> <i class="material-icons">description</i>
+                                    {{ view_event.description }}
+                                </p>
+                            </div>
+                            
+                            <div class="modal-footer">
+                                <ng-container *ngIf="identity != null">
+                                    <button class="btn btn-sm btn-secondary" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedAssistance(view_event._id)"> 
+                                        <span *ngIf="!checked_assistance && (time == 'proximos')"> No Asistiré </span> 
+                                        <span *ngIf="!checked_assistance && (time == 'pasados')"> No Asistí </span> 
+                                        <span *ngIf="checked_assistance && (time == 'proximos')"> ✅ Sí Asistiré </span> 
+                                        <span *ngIf="checked_assistance && (time == 'pasados')"> ✅ Sí Asistí </span> 
+                                    </button>
+
+                                    <button class="btn btn-sm btn-dark" *ngIf="identity.role == 'ROLE_USER'" style="margin:2px;" (click)="chekedFavorite(view_event._id)">                               
+                                        <span *ngIf="checked_favorite"> ⭐ Mis Favoritos </span> 
+                                        <span *ngIf="!checked_favorite"> Agregar a Favoritos </span>    
+                                    </button>
+                                </ng-container>
+                                <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cerrar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-container class="row" *ngIf="assistances">
+        <button [hidden]="items_showed >= items_size" class="btn btn-outline-dark btn-sm col-md-2 offset-4 mr-1" (click)="incrementItems('increment')">Mostrar más</button>
+        <button [hidden]="items_showed >= items_size" class="btn btn-outline-secondary btn-sm col-md-2" (click)="incrementItems('all')">Mostrar todos</button>
+    </ng-container>
 </div>

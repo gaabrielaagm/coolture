@@ -26,51 +26,22 @@
             <table class="table">
                 <thead class="thead-dark">
                     <tr class="d-flex">
-                        <th class="col-3">Título</th>
+                        <th class="col-4">Título</th>
                         <th class="col-2">Clasificacion</th>
-                        <th class="col-2">Tipo</th>
+                        <th class="col-3">Tipo</th>
                         <th class="col-2">Dia</th>
                         <th class="col-1">Hora</th>
-                        <th class="col-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="d-flex" *ngFor="let event of events | searchEvent: to_search; index as i">
                         <ng-container *ngIf="(i+1) <= items_showed">
-                            <td class="col-3"><a data-toggle="modal" href="#modal-view-{{event._id}}" (click)="getViewEvent(event._id)" title="Ver detalles">{{ event.title | titlecase }}</a></td>
+                            <td class="col-4"><a data-toggle="modal" href="#modal-view-{{event._id}}" (click)="getViewEvent(event._id)" title="Ver detalles">{{ event.title | titlecase }}</a></td>
                             <td class="col-2">{{ event.clasification | titlecase }}</td>
-                            <td class="col-2">{{ event.type | titlecase }}</td>
+                            <td class="col-3">{{ event.type | titlecase }}</td>
                             <td class="col-2">{{ event.date | date:'longDate' }} </td>
                             <td class="col-1">{{ event.hour }}</td>
-                            <td class="col-2">
-                                <!--<a [routerLink]="['/admin-panel/ver-detalles-evento', event._id]" title="Ver detalles" class="btn btn-primary btn-sm">🔍</a>-->
-                                <a data-toggle="modal" href="#modal-view-{{event._id}}" (click)="getViewEvent(event._id)" title="Ver detalles" class="btn btn-outline-primary btn-sm mr-1">🔍</a>
-                                <a [routerLink]="['/admin-panel/editar-evento', event._id]" title="Editar" class="btn btn-outline-warning btn-sm mr-1">✏️</a>
-                                <a data-toggle="modal" href="#modal-delete-{{event._id}}" title="Eliminar" class="btn btn-outline-danger btn-sm mr-1">❌</a>
-                            </td>
                         </ng-container>
-                        <!-- Delete modal -->
-                        <div class="modal fade" id="modal-delete-{{event._id}}" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title">
-                                        ¿Estas seguro de querer eliminar <br> <strong>{{event.title}}</strong>?
-                                    </h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    Si eliminas el evento ya no podrás recuperarlo.
-                                </div>
-                                <div class="modal-footer">
-                                    <a class="btn btn-info btn-sm" href="" data-dismiss="modal">Cancelar</a>
-                                    <a class="btn btn-danger btn-sm" data-dismiss="modal" (click)="deleteEvent(event._id)">Eliminar</a>
-                                </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- View modal-->
                         <div class="modal fade" id="modal-view-{{event._id}}" role="dialog" aria-hidden="true">
