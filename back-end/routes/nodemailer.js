@@ -16,5 +16,6 @@ var md_upload = multipart({ uploadDir: './uploads/events'});
 var md_admin = require('../middlewares/is_admin');
 
 api.post('/sendEmail/:clasification', [md_auth.ensureAuth, md_admin.isAdmin], NodeMailerController.sendEmail);
+api.post('/sendContactEmail', NodeMailerController.sendContactEmail);
 
 module.exports = api;

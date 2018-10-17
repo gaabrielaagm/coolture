@@ -32,4 +32,20 @@ export class EmailService {
         return this._http.post(this.url+'sendEmail', params, {headers: headers})
                             .pipe(map(res => res.json()));    
     }
+
+    sendContactMail(email, name, message){
+        var string = {
+            "name" : '"'+name+'"',
+            "email" : '"'+email+'"',
+            "message" : '"'+message+'"'
+        }
+
+        let params = JSON.stringify(string);
+        let headers = new Headers({
+            'Content-Type': 'application/json'
+        });
+
+        return this._http.post(this.url+'sendContactEmail', params, {headers: headers})
+                            .pipe(map(res => res.json()));    
+    }
 }

@@ -1,1 +1,65 @@
-{{title}}
+
+<div class="col-md-8 offset-2 mt-5">
+    <h3>{{title}}</h3>
+    <hr>
+    <!-- Mensajes de error al loguearse -->
+    <br>
+    <div class="alert alert-success" role="alert" *ngIf="emailState == 'success'">
+        <p>Tu mensaje fue <strong>enviado correctamente.</strong> Será respondido con brevedad.</p>
+    </div>
+    <div class="alert alert-danger" role="alert" *ngIf="emailState == 'fail'">
+        <p>Ha ocurrido un error. <a (click)="again()">Vuelve a intentarlo</a></p>
+    </div>
+
+    <!-- Form-->
+    <form #contactForm="ngForm" (ngSubmit)="submit()" *ngIf="emailState == null">
+        <div class="form-group">
+            <label for="correo" hidden="hidden">Correo:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        📧  
+                    </span>
+                </div>
+                <input type="correo" class="form-control" #email="ngModel" [(ngModel)]="email_user" 
+                id="correo" name="correo" placeholder="Correo: nombre@correo.com" 
+                required 
+                pattern="^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$">
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="email.touched && !email.valid">
+                <strong>Correo</strong> no válido.
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="name" hidden="hidden">Nombre:</label>
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">
+                        👥 
+                    </span>
+                </div>
+                <input type="text" class="form-control" #name="ngModel" [(ngModel)]="name_user" 
+                id="name" name="name" placeholder="Nombre" required>
+            </div>
+            <div class="alert alert-danger" role="alert" *ngIf="name.touched && !name.valid">
+                <strong>Nombre</strong> no válido.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="message" hidden="hidden">Mensaje:</label>
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    ✉️
+                </span>
+                <textarea required class="form-control" name="message" id="message" rows="3" style="resize: none" #message="ngModel" [(ngModel)]="message_user" placeholder="Esribre tu mensaje..."></textarea>
+            </div> 
+            <div class="alert alert-danger" role="alert" *ngIf="message.touched && !message.valid">
+                Introduce algún <strong>mensaje</strong>.
+            </div>
+        </div>
+
+        <input type="submit" value="Enviar" class="btn btn-primary" [disabled]="!contactForm.form.valid">
+    </form>
+</div>
