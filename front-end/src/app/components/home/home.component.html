@@ -1,19 +1,19 @@
 <ngb-carousel *ngIf="images" class="carousel">
     <ng-template ngbSlide *ngFor="let image of images">
-        <img class="w-100" [src]="image" alt="Random first slide" style="width: 1500px; height: 730;">
+        <img class="w-100" [src]="image" alt="Random first slide" style="width: 1500px; height: 750px;">
         <div class="carousel-caption">
-            <h3 class="display-3">Bienvenido(a)</h3>
-            <p class="lead">{{title}}</p>
-            <hr class="my-4">
+            <h3 class="display-2"> {{title}} </h3>
+            <p class="lead">Bienvenido(a)</p>
+            <hr class="my-3">
             <p class="">
-                <a class="btn btn-outline-primary btn-sm boton_home" [routerLink]="['/explorar']" role="button">
-                    Explora eventos recientes
+                <a class="btn btn-primary btn-md boton_home" [routerLink]="['/explorar']" role="button">
+                    Explorar eventos próximos
                 </a>
-                <a class="btn btn-outline-success btn-sm boton_home" [routerLink]="['/registro']" role="button">
-                    Crea una cuenta y disfruta de más beneficios
+                <a class="btn btn-success btn-md boton_home" [routerLink]="['/registro']" role="button">
+                    Crear una cuenta y disfruta de más beneficios
                 </a>
-                <a class="btn btn-outline-warning btn-sm boton_home" [routerLink]="['/contacto']" role="button">
-                    Contáctanos
+                <a class="btn btn-warning btn-md boton_home" [routerLink]="['/contacto']" role="button">
+                    Contactarnos
                 </a>
             </p>
         </div>

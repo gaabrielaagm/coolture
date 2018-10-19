@@ -15,12 +15,9 @@ import { EditProfileComponent } from './components/user-profile/edit/edit-profil
 import { ViewProfileComponent } from './components/user-profile/view/view-profile.component';
 
 const appRoutes: Routes = [
-    
-    {path: '', redirectTo: 'home', pathMatch: 'full'},
     {path: 'home', component: HomeComponent},
+    {path: '', redirectTo: 'home', pathMatch: 'full'},
     {path: 'artistas', component: ArtistsComponent},
-    //{path: 'eventos', component: EventsComponent},
-    //{path: 'rankings/:tipo', component: RankingComponent},
     {path: 'contacto', component: ContactComponent},
     {path: 'registro', component: RegisterComponent},
     {path: 'login', component: LoginComponent},

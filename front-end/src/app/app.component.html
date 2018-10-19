@@ -42,7 +42,7 @@
     </nav>
 </div>
 
-<div *ngIf="_router.url === '/home'" style="min-height: 800px;">
+<div *ngIf="_router.url === '/home' || _router.url === ''">
     <router-outlet></router-outlet>
 </div>
 <div class="col-md-12" *ngIf="_router.url !== '/home'">
