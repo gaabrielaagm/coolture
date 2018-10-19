@@ -16,7 +16,6 @@ import { ViewProfileComponent } from './components/user-profile/view/view-profil
 
 const appRoutes: Routes = [
     
-    {path: '', component: HomeComponent},
     {path: '', redirectTo: 'home', pathMatch: 'full'},
     {path: 'home', component: HomeComponent},
     {path: 'artistas', component: ArtistsComponent},

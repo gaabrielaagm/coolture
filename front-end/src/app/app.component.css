@@ -12,11 +12,11 @@
 }
 
 .navbar .active{
-    border-top: 2px solid rgb(44, 12, 131);
+    border-top: 3px solid rgb(43, 7, 141);
 }
 
 .nav-link:hover{
-    border-bottom: 2px solid rgb(44, 12, 131);
+    border-bottom: 3px solid rgb(43, 7, 141);
     color: rgb(151, 16, 111);
 }
 
@@ -48,3 +48,5 @@
 .bg-darks{
     background-color: #212121; 
 }
+
+i{ vertical-align: middle !important; }

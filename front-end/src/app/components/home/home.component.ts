@@ -10,7 +10,10 @@ import {NgbPaginationModule, NgbAlertModule} from '@ng-bootstrap/ng-bootstrap';
 })
 export class HomeComponent {
     public title : String;
-    images = [1, 2, 3].map(() => `https://picsum.photos/1500/730?random&t=${Math.random()}`);
+    //images = [1, 2, 3].map(() => `https://picsum.photos/1500/730?random&t=${Math.random()}`);
+    images = ["../../../assets/images/bg_home/background1.png", 
+                "../../../assets/images/bg_home/background2.png", 
+                "../../../assets/images/bg_home/background3.png"];
 
     constructor(
         private _userService: UserService

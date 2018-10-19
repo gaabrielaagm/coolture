@@ -2,28 +2,64 @@
         
         margin-bottom: 5%;
         height: 400px;
+        box-shadow: 7px 7px 10px #ccc;
 }
 
 .borderPurple{
-    border-right: solid #4A148C 10px;
+    border-left: solid #4A148C 10px;
+}
+.borderPurple:hover{
+    border-bottom: solid #4A148C 10px;
+    border-top: solid #4A148C 10px;
+    border-left: none;
 }
 .borderGreen{
-    border-right: solid #76FF03 10px;
+    border-left: solid #76FF03 10px;
+}
+.borderGreen:hover{
+    border-bottom: solid #76FF03 10px;
+    border-top: solid #76FF03 10px;
+    border-left: none;
 }
 .borderBlue{
-    border-right: solid #006064 10px;
+    border-left: solid #006064 10px;
+}
+.borderBlue:hover{
+    border-bottom: solid #006064 10px;
+    border-top: solid #006064 10px;
+    border-left: none;
 }
 .borderOrange{
-    border-right: solid #FF3D00 10px;
+    border-left: solid #FF3D00 10px;
+}
+.borderOrange:hover{
+    border-bottom: solid #FF3D00 10px;
+    border-top: solid #FF3D00 10px;
+    border-left: none;
 }
 .borderRed{
-    border-right: solid #F50057 10px;
+    border-left: solid #F50057 10px;
+}
+.borderRed:hover{
+    border-bottom: solid #F50057 10px;
+    border-top: solid #F50057 10px;
+    border-left: none;
 }
 .borderBlack{
-    border-right: solid #4E342E 10px;
+    border-left: solid #4E342E 10px;
+}
+.borderBlack:hover{
+    border-bottom: solid #4E342E 10px;
+    border-top: solid #4E342E 10px;
+    border-left: none;
 }
 .borderYellow{
-    border-right: solid #FFEA00 10px;
+    border-left: solid #FFEA00 10px;
+}
+.borderYellow:hover{
+    border-bottom: solid #FFEA00 10px;
+    border-top: solid #FFEA00 10px;
+    border-left: none;
 }
 
 i{ vertical-align: middle !important; }
